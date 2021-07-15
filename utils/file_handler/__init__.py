@@ -57,3 +57,15 @@ def save_to_html(data, title="test.html"):
 def dataToExcel(dataDict, filename):
     df = pd.DataFrame(dataDict)
     df.to_csv(filename, mode="a", index=False, header=not os.path.exists(filename))
+
+
+def read_html(filename="test.html"):
+    import codecs
+    from utils.parser_handler import init_parser
+
+    with codecs.open('test.html','r','utf-8') as file:
+        src_code = file.read()
+    
+    soap = init_parser(src_code)
+    return soap
+
