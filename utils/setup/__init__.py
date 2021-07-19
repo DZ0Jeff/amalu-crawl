@@ -1,7 +1,7 @@
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from fake_useragent import UserAgent
+# from fake_useragent import UserAgent
 from utils.build import resource_path
 from utils.proxy import init_proxy
 from dotenv import load_dotenv
@@ -10,8 +10,8 @@ from dotenv import load_dotenv
 def setSelenium(console=True, proxy=False):
     # configuração do selenium
     chrome_options = Options()
-    ua = UserAgent()
-    userAgent = ua.random
+    # ua = UserAgent()
+    # userAgent = ua.random
     load_dotenv()
 
     if not console:
