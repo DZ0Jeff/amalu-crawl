@@ -2,6 +2,7 @@ import os
 import sys
 import requests
 import shutil
+import re
 
 from utils.setup import setSelenium
 from utils.file_handler import dataToExcel
@@ -73,14 +74,19 @@ def crawl_magazinevoce(url="https://www.magazinevoce.com.br/magazinei9bux/carga-
     soap = init_crawler(url)
 
     print('> extraíndo informações...')
-    title = [element for element in soap.find('h3') if isinstance(element, NavigableString)][0].strip()
-    raw_sku = soap.select_one('h3.hide-desktop span.product-sku').text
-    sku = raw_sku.split(' ')[-1].replace(')','')
-    category = soap.find('a', class_="category").text
-    price = soap.find('div', class_="p-price").text
-    installments = soap.find('p', class_="p-installment").text
-    description = soap.find('table', class_="tab descricao").text
-    galery = download_image(soap.find('div', class_="pgallery").find('img')['src'])
+    try:
+        title = [element for element in soap.find('h3') if isinstance(element, NavigableString)][0].strip()
+        raw_sku = soap.select_one('h3.hide-desktop span.product-sku').text
+        sku = raw_sku.split(' ')[-1].replace(')','')
+        category = soap.find('a', class_="category").text
+        price = soap.find('div', class_="p-price").text
+        installments = soap.find('p', class_="p-installment").text
+        description = soap.find('table', class_="tab descricao").text
+        galery = soap.find('div', class_="pgallery").find('img')['src']
+
+    except Exception: 
+        print('> Falha ao extrair dados! contate do administrador do sistema...')
+        return
 
     details = dict()
     details['sku'] = [remove_whitespaces(sku)]
@@ -98,6 +104,7 @@ def crawl_magazinevoce(url="https://www.magazinevoce.com.br/magazinei9bux/carga-
 
 def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520S/dp/B07SSCKJJ3/ref=sr_1_7?__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=smart+tv&qid=1626360552&sr=8-7"):
     
+    url = str(url)
     print('> Iniciando Amazon crawler...')
     driver = setSelenium(False)
     html = dynamic_page(driver, url)
@@ -106,26 +113,47 @@ def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520
     # soap = init_crawler(url)
 
     print('> Extraíndo dados...')
-    title = soap.select_one('h1 span')
+    title = soap.select_one('h1 span').text
     try:
         price = soap.find('span', id="priceblock_ourprice").text
     except Exception:
-        price = "Não disponível..."
+        try:
+            raw_price = soap.find('tr', id="conditionalPrice").text
+            price = remove_whitespaces(raw_price)
 
-    breadcrumb = soap.find('ul', class_="a-unordered-list a-horizontal a-size-small")
-    category = breadcrumb.select('span.a-list-item')[-1]
-    description = soap.find('div', id="feature-bullets")
-    galery = download_image(soap.find('div', id="imgTagWrapperId").find('img')['src'])
+        except Exception:
+            price = "Não disponível..."
+
+    try:
+        breadcrumb = soap.find('ul', class_="a-unordered-list a-horizontal a-size-small")
+        category = breadcrumb.select('span.a-list-item')[-1].text
+    except AttributeError:
+        category = "Não localizado..."
+
+    try:
+        description = soap.find('div', id="feature-bullets").get_text(separator="\n")
+
+    except AttributeError:
+        description = "Não localizado..."
+
+    try:
+        ean = soap.find('th', string=re.compile("EAN")).findNext('td').text
+    
+    except AttributeError:
+        ean = "Não localizado..."
+
+    galery = soap.find('div', id="imgTagWrapperId").find('img')['src']
 
     details = dict()
-    details['Título'] = [remove_whitespaces(title.text)]
+    details['EAN'] = [remove_whitespaces(ean)]
+    details['Título'] = [remove_whitespaces(title)]
     details['Preço'] = [price]
-    details['Categoria'] = [remove_whitespaces(category.text)]
+    details['Categoria'] = [remove_whitespaces(category)]
     details['link'] = [url]
-    details['Descrição'] = [remove_whitespaces(description.get_text(separator="\n"))]
+    details['Descrição'] = [remove_whitespaces(description)]
     details['Galeria'] = [galery]
 
-    # [print(f"{title}: {detail}") for title, detail in details.items()]
+    # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
     print('> Salvando em arquivo...')
     dataToExcel(details, 'amazon.csv')
 
