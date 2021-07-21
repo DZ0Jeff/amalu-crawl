@@ -12,8 +12,9 @@ from utils.webdriver_handler import dynamic_page
 
 
 def download_image(url):
-    if not os.path.isdir("./galeria"):
-        os.makedirs("./galeria")
+    pic_folder = "/galeria"
+    if not os.path.isdir(pic_folder):
+        os.makedirs(pic_folder)
 
     if url.split('/')[2] == 'm.media-amazon.com':
         filename = url.split('/')[-1].split('.')[0]        
@@ -33,13 +34,13 @@ def download_image(url):
             handle.write(block)
     
     try:
-        shutil.move(f'./{filename}.jpg', './galeria')
+        shutil.move(f'./{filename}.jpg', pic_folder)
     
     except shutil.Error:
         os.unlink(f'./{filename}.jpg')
         print('Imagem já movida!')
 
-    return f"/galeria/{filename}"
+    return f"{pic_folder}/{filename}"
 
 
 def find_images(soap):
@@ -61,7 +62,7 @@ def find_images(soap):
             image_test = sanitize_image(image)
             if not image_test.endswith('.svg'):
                 image = higher_resolution(image['src'])
-                images.append(image)
+                images.append(f"{image}\n")
         except (KeyError, TypeError):
             pass
     
@@ -75,6 +76,7 @@ def crawl_magazinevoce(url="https://www.magazinevoce.com.br/magazinei9bux/carga-
 
     print('> extraíndo informações...')
     try:
+        store = url.split('/')[3]
         title = [element for element in soap.find('h3') if isinstance(element, NavigableString)][0].strip()
         raw_sku = soap.select_one('h3.hide-desktop span.product-sku').text
         sku = raw_sku.split(' ')[-1].replace(')','')
@@ -89,7 +91,8 @@ def crawl_magazinevoce(url="https://www.magazinevoce.com.br/magazinei9bux/carga-
         return
 
     details = dict()
-    details['sku'] = [remove_whitespaces(sku)]
+    details['Sku'] = [remove_whitespaces(sku)]
+    details['Loja'] = [store]
     details['Título'] = [title]
     details['Categoria'] = [category]
     details['Preço'] = [remove_whitespaces(price)]
@@ -114,11 +117,14 @@ def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520
 
     print('> Extraíndo dados...')
     title = soap.select_one('h1 span').text
+
+    store = url.split("/")[2].split('.')[1]
     try:
         price = soap.find('span', id="priceblock_ourprice").text
     except Exception:
         try:
-            raw_price = soap.find('tr', id="conditionalPrice").text
+            # raw_price = soap.find('tr', id="conditionalPrice").text
+            raw_price = soap.find('span', id="price").text
             price = remove_whitespaces(raw_price)
 
         except Exception:
@@ -134,7 +140,11 @@ def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520
         description = soap.find('div', id="feature-bullets").get_text(separator="\n")
 
     except AttributeError:
-        description = "Não localizado..."
+        try:
+            description = soap.find('div', id="bookDescription_feature_div").text
+
+        except Exception:
+            description = "Não localizado..."
 
     try:
         ean = soap.find('th', string=re.compile("EAN")).findNext('td').text
@@ -142,9 +152,18 @@ def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520
     except AttributeError:
         ean = "Não localizado..."
 
-    galery = soap.find('div', id="imgTagWrapperId").find('img')['src']
+    try:
+        galery = soap.find('div', id="imgTagWrapperId").find('img')['src']
+    
+    except AttributeError:
+        try:
+            galery = soap.find('img', id="imgBlkFront")['src']
+        
+        except Exception:
+            galery = "Não localizado..."
 
     details = dict()
+    details['Loja'] = [store]
     details['EAN'] = [remove_whitespaces(ean)]
     details['Título'] = [remove_whitespaces(title)]
     details['Preço'] = [price]
