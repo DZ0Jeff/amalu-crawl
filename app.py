@@ -1,73 +1,12 @@
-import os
 import sys
-import requests
-import shutil
 import re
+from bs4 import NavigableString
 
+from src.utils import find_images, getImageGalery, get_specs, get_magazine_specs
 from utils.setup import setSelenium
 from utils.file_handler import dataToExcel
-from utils.parser_handler import init_crawler, init_parser, remove_duplicates_on_list, remove_whitespaces
-from bs4 import NavigableString
+from utils.parser_handler import init_crawler, init_parser, remove_whitespaces
 from utils.webdriver_handler import dynamic_page
-
-
-def download_image(url):
-    pic_folder = "/galeria"
-    if not os.path.isdir(pic_folder):
-        os.makedirs(pic_folder)
-
-    if url.split('/')[2] == 'm.media-amazon.com':
-        filename = url.split('/')[-1].split('.')[0]        
-    else:
-        filename = url.split('/')[4]
-
-    with open(f"{filename}.jpg", 'wb') as handle:
-        response = requests.get(url, stream=True)
-
-        if not response.ok:
-            print(response)
-
-        for block in response.iter_content(1024):
-            if not block:
-                break
-
-            handle.write(block)
-    
-    try:
-        shutil.move(f'./{filename}.jpg', pic_folder)
-    
-    except shutil.Error:
-        os.unlink(f'./{filename}.jpg')
-        print('Imagem já movida!')
-
-    return f"{pic_folder}/{filename}"
-
-
-def find_images(soap):
-    def sanitize_image(image):
-        return image['src'].split('/')[-1]
-
-    def higher_resolution(image):
-        try:
-            return image.replace('88x66','618x463')
-        
-        except TypeError:
-            return
-
-    galery = soap.find('div', class_="pgallery")
-    images = []
-
-    for image in galery.find_all('img'):
-        try:
-            image_test = sanitize_image(image)
-            if not image_test.endswith('.svg'):
-                image = higher_resolution(image['src'])
-                images.append(f"{image}\n")
-        except (KeyError, TypeError):
-            pass
-    
-    images = remove_duplicates_on_list(images)
-    return '\n'.join(images)
 
 
 def crawl_magazinevoce(url="https://www.magazinevoce.com.br/magazinei9bux/carga-para-aparelho-de-barbear-gillette-mach3-sensitive-16-cargas/p/218044400/ME/LADB/"):
@@ -79,12 +18,13 @@ def crawl_magazinevoce(url="https://www.magazinevoce.com.br/magazinei9bux/carga-
         store = url.split('/')[3]
         title = [element for element in soap.find('h3') if isinstance(element, NavigableString)][0].strip()
         raw_sku = soap.select_one('h3.hide-desktop span.product-sku').text
-        sku = raw_sku.split(' ')[-1].replace(')','')
+        sku = raw_sku.split(' ')[-1].replace(')','').strip()
         category = soap.find('a', class_="category").text
-        price = soap.find('div', class_="p-price").text
+        price = str(soap.find('div', class_="p-price").find('strong').text).replace("por", '')
         installments = soap.find('p', class_="p-installment").text
+        specs = get_magazine_specs(soap)
         description = soap.find('table', class_="tab descricao").text
-        galery = soap.find('div', class_="pgallery").find('img')['src']
+        galery = soap.find('div', class_="pgallery").find('img')['src'] # find_images(soap)
 
     except Exception: 
         print('> Falha ao extrair dados! contate do administrador do sistema...')
@@ -92,15 +32,19 @@ def crawl_magazinevoce(url="https://www.magazinevoce.com.br/magazinei9bux/carga-
 
     details = dict()
     details['Sku'] = [remove_whitespaces(sku)]
-    details['Loja'] = [store]
-    details['Título'] = [title]
-    details['Categoria'] = [category]
+    details['Type'] = ["external"]
+    # details['Loja'] = [store]
+    details['Nome'] = [title]
+    details['Categorias'] = [f"{store} > {category}"]
     details['Preço'] = [remove_whitespaces(price)]
-    details['Parcelas'] = [remove_whitespaces(installments)]
-    details['Link'] = [url]
+    # details['Parcelas'] = [remove_whitespaces(installments)]
+    details['Url Externa'] = [url]
+    details['Texto do botão'] = ["Ver produto"]
+    details['Short description'] = [specs]
     details['Descrição'] = [remove_whitespaces(description)]
-    details['Galeria'] = [galery]
+    details['Imagens'] = [galery]
 
+    # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
     print('> Salvando resultados...')
     dataToExcel(details, 'magazinevoce.csv')
 
@@ -110,71 +54,114 @@ def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520
     url = str(url)
     print('> Iniciando Amazon crawler...')
     driver = setSelenium(False)
-    html = dynamic_page(driver, url)
-    driver.quit()
-    soap = init_parser(html)
-    # soap = init_crawler(url)
-
-    print('> Extraíndo dados...')
-    title = soap.select_one('h1 span').text
-
-    store = url.split("/")[2].split('.')[1]
     try:
-        price = soap.find('span', id="priceblock_ourprice").text
-    except Exception:
-        try:
-            # raw_price = soap.find('tr', id="conditionalPrice").text
-            raw_price = soap.find('span', id="price").text
-            price = remove_whitespaces(raw_price)
+        driver.get(url)
+        galery = False # getImageGalery(driver)
+        html = dynamic_page(driver)
+        driver.quit()
+        soap = init_parser(html)
 
-        except Exception:
-            price = "Não disponível..."
-
-    try:
-        breadcrumb = soap.find('ul', class_="a-unordered-list a-horizontal a-size-small")
-        category = breadcrumb.select('span.a-list-item')[-1].text
-    except AttributeError:
-        category = "Não localizado..."
-
-    try:
-        description = soap.find('div', id="feature-bullets").get_text(separator="\n")
-
-    except AttributeError:
-        try:
-            description = soap.find('div', id="bookDescription_feature_div").text
-
-        except Exception:
-            description = "Não localizado..."
-
-    try:
-        ean = soap.find('th', string=re.compile("EAN")).findNext('td').text
-    
-    except AttributeError:
-        ean = "Não localizado..."
-
-    try:
-        galery = soap.find('div', id="imgTagWrapperId").find('img')['src']
-    
-    except AttributeError:
-        try:
-            galery = soap.find('img', id="imgBlkFront")['src']
+        print('> Extraíndo dados...')
         
+        # name of product
+        title = soap.select_one('h1 span').text
+
+        # store target
+        store = url.split("/")[2].split('.')[1]
+        
+        # price of product
+        try:
+            price = soap.find('span', id="priceblock_ourprice").text
         except Exception:
-            galery = "Não localizado..."
+            try:
+                # raw_price = soap.find('tr', id="conditionalPrice").text
+                raw_price = soap.find('span', id="price").text
+                price = remove_whitespaces(raw_price)
 
-    details = dict()
-    details['Loja'] = [store]
-    details['EAN'] = [remove_whitespaces(ean)]
-    details['Título'] = [remove_whitespaces(title)]
-    details['Preço'] = [price]
-    details['Categoria'] = [remove_whitespaces(category)]
-    details['link'] = [url]
-    details['Descrição'] = [remove_whitespaces(description)]
-    details['Galeria'] = [galery]
+            except Exception:
+                price = "Não disponível..."
 
-    # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
-    print('> Salvando em arquivo...')
-    dataToExcel(details, 'amazon.csv')
+        # installments of price
+        try:
+            installments = soap.find('span', class_="best-offer-name a-text-bold").text
+        
+        except AttributeError:
+            installments = ''
+
+        # specs
+        try:
+            raw_specs = soap.find('div', id="productOverview_feature_div")
+            specs = get_specs(raw_specs)
+
+        except AttributeError:
+            specs = ""
+
+        # category
+        try:
+            breadcrumb = soap.find('ul', class_="a-unordered-list a-horizontal a-size-small")
+            category = breadcrumb.select('span.a-list-item')[-1].text
+        except AttributeError:
+            category = ""
+
+        # manufactory
+        try:
+            manufactor = str(soap.find('a', id="bylineInfo").text).replace('Marca:','')
+
+        except AttributeError:
+            manufactor = ""
+
+        # description
+        try:
+            description = soap.find('div', id="feature-bullets").get_text(separator="\n")
+
+        except AttributeError:
+            try:
+                description = soap.find('div', id="bookDescription_feature_div").text
+
+            except Exception:
+                description = ""
+
+        # ean/sku
+        try:
+            ean = soap.find('th', string=re.compile("EAN")).findNext('td').text
+        
+        except AttributeError:
+            ean = ""
+
+        # images
+        if not galery:
+            try:
+                galery = soap.find('div', id="imgTagWrapperId").find('img')['src']
+            
+            except AttributeError:
+                try:
+                    galery = soap.find('img', id="imgBlkFront")['src']
+                
+                except Exception:
+                    galery = ""
+
+        details = dict()
+        # details['Loja'] = [store]
+        details['Type'] = ["external"]
+        details['SKU'] = [remove_whitespaces(ean)]
+        details['Nome'] = [remove_whitespaces(title)]
+        # details['Marca'] = [remove_whitespaces(manufactor)]
+        details['Preço'] = [price]
+        # details['Parcelas'] = [remove_whitespaces(installments)]
+        details['Categorias'] = [f"{store} > {remove_whitespaces(category)}"]
+        details['Url externa'] = [url]
+        details['Texto do botão'] = ["Ver produto"]
+        details['Short description'] = [specs]
+        details['Descrição'] = [remove_whitespaces(description)]
+        details['Imagens'] = [galery]
+
+        # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
+        print('> Salvando em arquivo...')
+        dataToExcel(details, 'amazon.csv')
+    
+    except Exception:
+        driver.quit()
+        raise
 
 
 def main():
