@@ -2,7 +2,7 @@ import sys
 import re
 from bs4 import NavigableString
 
-from src.utils import find_images, getImageGalery, get_specs, get_magazine_specs
+from src.utils import find_magalu_images, getAmazonImageGalery, get_specs, get_magazine_specs
 from utils.setup import setSelenium
 from utils.file_handler import dataToExcel
 from utils.parser_handler import init_crawler, init_parser, remove_whitespaces
@@ -24,7 +24,8 @@ def crawl_magazinevoce(url="https://www.magazinevoce.com.br/magazinei9bux/carga-
         installments = soap.find('p', class_="p-installment").text
         specs = get_magazine_specs(soap)
         description = soap.find('table', class_="tab descricao").text
-        galery = soap.find('div', class_="pgallery").find('img')['src'] # find_images(soap)
+        galery = find_magalu_images(soap) # soap.find('div', class_="pgallery").find('img')['src'] 
+        print(galery)
 
     except Exception: 
         print('> Falha ao extrair dados! contate do administrador do sistema...')
@@ -46,7 +47,7 @@ def crawl_magazinevoce(url="https://www.magazinevoce.com.br/magazinei9bux/carga-
 
     # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
     print('> Salvando resultados...')
-    dataToExcel(details, 'magazinevoce.csv')
+    dataToExcel(details, 'magazinevoce-image.csv')
 
 
 def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520S/dp/B07SSCKJJ3/ref=sr_1_7?__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=smart+tv&qid=1626360552&sr=8-7"):
@@ -56,7 +57,7 @@ def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520
     driver = setSelenium(False)
     try:
         driver.get(url)
-        galery = False # getImageGalery(driver)
+        galery = getAmazonImageGalery(driver)
         html = dynamic_page(driver)
         driver.quit()
         soap = init_parser(html)
@@ -140,6 +141,7 @@ def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520
                 except Exception:
                     galery = ""
 
+        print(galery)
         details = dict()
         # details['Loja'] = [store]
         details['Type'] = ["external"]
@@ -157,7 +159,7 @@ def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520
 
         # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
         print('> Salvando em arquivo...')
-        dataToExcel(details, 'amazon.csv')
+        dataToExcel(details, 'amazon-image.csv')
     
     except Exception:
         driver.quit()

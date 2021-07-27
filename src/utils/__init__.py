@@ -8,7 +8,7 @@ import requests
 import shutil
 
 
-def getImageGalery(driver):
+def getAmazonImageGalery(driver):
     print('> Iniciando extração da galeria...')
     driver.implicitly_wait(10)
 
@@ -49,7 +49,7 @@ def getImageGalery(driver):
 
     galery = remove_duplicates_on_list(galery)
     print('> Imagens extraídas!')
-    return '\n'.join(galery)
+    return ','.join(galery)
 
 
 def download_image(url):
@@ -84,7 +84,7 @@ def download_image(url):
     return f"{pic_folder}/{filename}"
 
 
-def find_images(soap):
+def find_magalu_images(soap):
     def sanitize_image(image):
         return image['src'].split('/')[-1]
 
@@ -103,12 +103,12 @@ def find_images(soap):
             image_test = sanitize_image(image)
             if not image_test.endswith('.svg'):
                 image = higher_resolution(image['src'])
-                images.append(f"{image} ")
+                images.append(f"{image}")
         except (KeyError, TypeError):
             pass
     
     images = remove_duplicates_on_list(images)
-    return '\n'.join(images)
+    return ','.join(images)
 
 
 def get_specs(raw_specs):
