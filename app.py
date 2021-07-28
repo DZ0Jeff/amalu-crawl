@@ -9,7 +9,7 @@ from utils.parser_handler import init_crawler, init_parser, remove_whitespaces
 from utils.webdriver_handler import dynamic_page
 
 
-def crawl_magazinevoce(url="https://www.magazinevoce.com.br/magazinei9bux/carga-para-aparelho-de-barbear-gillette-mach3-sensitive-16-cargas/p/218044400/ME/LADB/"):
+def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
     print('> iniciando magazinei9bux crawler...')
     soap = init_crawler(url)
 
@@ -21,11 +21,10 @@ def crawl_magazinevoce(url="https://www.magazinevoce.com.br/magazinei9bux/carga-
         sku = raw_sku.split(' ')[-1].replace(')','').strip()
         category = soap.find('a', class_="category").text
         price = str(soap.find('div', class_="p-price").find('strong').text).replace("por", '')
-        installments = soap.find('p', class_="p-installment").text
+        # installments = soap.find('p', class_="p-installment").text
         specs = get_magazine_specs(soap)
         description = soap.find('table', class_="tab descricao").text
         galery = find_magalu_images(soap) # soap.find('div', class_="pgallery").find('img')['src'] 
-        print(galery)
 
     except Exception: 
         print('> Falha ao extrair dados! contate do administrador do sistema...')
@@ -34,23 +33,23 @@ def crawl_magazinevoce(url="https://www.magazinevoce.com.br/magazinei9bux/carga-
     details = dict()
     details['Sku'] = [remove_whitespaces(sku)]
     details['Type'] = ["external"]
-    # details['Loja'] = [store]
     details['Nome'] = [title]
     details['Categorias'] = [f"{store} > {category}"]
-    details['Preço'] = [remove_whitespaces(price)]
-    # details['Parcelas'] = [remove_whitespaces(installments)]
+    details['Preço'] = [f"{remove_whitespaces(price)} (Valor aproximado)"]
     details['Url Externa'] = [url]
     details['Texto do botão'] = ["Ver produto"]
     details['Short description'] = [specs]
     details['Descrição'] = [remove_whitespaces(description)]
     details['Imagens'] = [galery]
 
-    # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
+    if verbose:
+        [print(f"{title}: {detail[0]}") for title, detail in details.items()]
+    
     print('> Salvando resultados...')
-    dataToExcel(details, 'magazinevoce-image.csv')
+    dataToExcel(details, f'{nameOfFile}.csv')
 
 
-def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520S/dp/B07SSCKJJ3/ref=sr_1_7?__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=smart+tv&qid=1626360552&sr=8-7"):
+def crawl_amazon(url, nameOfFile="Amazon"):
     
     url = str(url)
     print('> Iniciando Amazon crawler...')
@@ -69,26 +68,6 @@ def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520
 
         # store target
         store = url.split("/")[2].split('.')[1]
-        
-        # price of product
-        try:
-            price = soap.find('span', id="priceblock_ourprice").text
-        except Exception:
-            try:
-                # raw_price = soap.find('tr', id="conditionalPrice").text
-                raw_price = soap.find('span', id="price").text
-                price = remove_whitespaces(raw_price)
-
-            except Exception:
-                price = "Não disponível..."
-
-        # installments of price
-        try:
-            installments = soap.find('span', class_="best-offer-name a-text-bold").text
-        
-        except AttributeError:
-            installments = ''
-
         # specs
         try:
             raw_specs = soap.find('div', id="productOverview_feature_div")
@@ -104,13 +83,6 @@ def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520
         except AttributeError:
             category = ""
 
-        # manufactory
-        try:
-            manufactor = str(soap.find('a', id="bylineInfo").text).replace('Marca:','')
-
-        except AttributeError:
-            manufactor = ""
-
         # description
         try:
             description = soap.find('div', id="feature-bullets").get_text(separator="\n")
@@ -124,7 +96,7 @@ def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520
 
         # ean/sku
         try:
-            ean = soap.find('th', string=re.compile("EAN")).findNext('td').text
+            ean = soap.find('th', string=re.compile("ASIN")).findNext('td').text
         
         except AttributeError:
             ean = ""
@@ -141,7 +113,22 @@ def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520
                 except Exception:
                     galery = ""
 
-        print(galery)
+        # price of product
+        try:
+            urlPrice = f"https://ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=BR&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=vantajao0e-20&language=pt_BR&marketplace=amazon&region=BR&placement=B088HJ3FCX&asins={ean}&linkId=2113f78bf439002e072fcf867b4c8889&show_border=true&link_opens_in_new_window=true"
+            adPrice = init_crawler(urlPrice)
+            price = adPrice.find('span', class_="price").text
+            
+        except Exception:
+            try:
+                # raw_price = soap.find('tr', id="conditionalPrice").text
+                raw_price = soap.find('span', id="price").text
+                price = remove_whitespaces(raw_price)
+
+            except Exception:
+                price = ""
+
+
         details = dict()
         # details['Loja'] = [store]
         details['Type'] = ["external"]
@@ -159,7 +146,7 @@ def crawl_amazon(url="https://www.amazon.com.br/Smart-Monitor-LG-Machine-24TL520
 
         # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
         print('> Salvando em arquivo...')
-        dataToExcel(details, 'amazon-image.csv')
+        dataToExcel(details, f'{nameOfFile}.csv')
     
     except Exception:
         driver.quit()
@@ -173,10 +160,10 @@ def main():
     link = sys.argv[1]
     if link != '' or 'pd_rd_w' or "pf_rd_p" or "pf_rd_r" or "pd_rd_wg" or "pd_rd_i":
         if link.split('/')[2] == "www.amazon.com.br":
-            crawl_amazon(link)
+            crawl_amazon(link, "Amazon-image-2")
 
         elif link.split('/')[2] == "www.magazinevoce.com.br":
-            crawl_magazinevoce(link)
+            crawl_magazinevoce(link,'magalu-image-2')
         else:
             print('> Link inválido! insira um link válido de um produto da amazon ou magazinevocê...')
     

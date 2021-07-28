@@ -5,3 +5,7 @@ __pycache__/
 create.py
 data/
 selectGaleryAmazon.py
+driver/
+link.html
+*.csv
+server.py
