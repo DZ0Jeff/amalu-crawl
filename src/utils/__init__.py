@@ -124,6 +124,18 @@ def get_specs(raw_specs):
     return '\n'.join(specs)
 
 
+def format_table(raw_table):
+    specs = []
+
+    for column in raw_table.find_all('tr'):    
+        title_table = column.select('th')[0].text
+        content_table = column.select('td')[-1].text
+        text_table = f"{remove_whitespaces(title_table)}: {remove_whitespaces(content_table)}"
+        specs.append(text_table)
+
+    return '\n'.join(specs)
+
+
 def get_magazine_specs(soap):
     try:
         container = soap.find('table', class_="tab ficha-tecnica")

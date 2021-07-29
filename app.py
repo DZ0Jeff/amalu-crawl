@@ -2,7 +2,7 @@ import sys
 import re
 from bs4 import NavigableString
 
-from src.utils import find_magalu_images, getAmazonImageGalery, get_specs, get_magazine_specs
+from src.utils import find_magalu_images, format_table, getAmazonImageGalery, get_specs, get_magazine_specs
 from utils.setup import setSelenium
 from utils.file_handler import dataToExcel
 from utils.parser_handler import init_crawler, init_parser, remove_whitespaces
@@ -21,7 +21,13 @@ def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
         sku = raw_sku.split(' ')[-1].replace(')','').strip()
         category = soap.find('a', class_="category").text
         price = str(soap.find('div', class_="p-price").find('strong').text).replace("por", '')
-        # installments = soap.find('p', class_="p-installment").text
+        try:
+            raw_tecnical_details = soap.find('table', class_="tab ficha-tecnica")
+            tecnical_details = get_specs(raw_tecnical_details)
+        
+        except Exception:
+            tecnical_details = ""
+
         specs = get_magazine_specs(soap)
         description = soap.find('table', class_="tab descricao").text
         galery = find_magalu_images(soap) # soap.find('div', class_="pgallery").find('img')['src'] 
@@ -39,7 +45,7 @@ def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
     details['Url Externa'] = [url]
     details['Texto do botão'] = ["Ver produto"]
     details['Short description'] = [specs]
-    details['Descrição'] = [remove_whitespaces(description)]
+    details['Descrição'] = [f"{remove_whitespaces(description)}\n\nDescrição\n\n{tecnical_details}"]
     details['Imagens'] = [galery]
 
     if verbose:
@@ -94,6 +100,21 @@ def crawl_amazon(url, nameOfFile="Amazon"):
             except Exception:
                 description = ""
 
+        # tecnical details
+        try:
+            raw_tecnical_details = soap.find('table', id="productDetails_techSpec_section_1")
+            tecnical_details = format_table(raw_tecnical_details)
+
+        except AttributeError:
+            tecnical_details = ""
+
+        try:
+            raw_info = soap.find('table', id="productDetails_detailBullets_sections1")
+            aditional_info = format_table(raw_info)
+
+        except AttributeError:
+            aditional_info = ""
+
         # ean/sku
         try:
             ean = soap.find('th', string=re.compile("ASIN")).findNext('td').text
@@ -130,23 +151,21 @@ def crawl_amazon(url, nameOfFile="Amazon"):
 
 
         details = dict()
-        # details['Loja'] = [store]
         details['Type'] = ["external"]
         details['SKU'] = [remove_whitespaces(ean)]
         details['Nome'] = [remove_whitespaces(title)]
-        # details['Marca'] = [remove_whitespaces(manufactor)]
         details['Preço'] = [price]
-        # details['Parcelas'] = [remove_whitespaces(installments)]
         details['Categorias'] = [f"{store} > {remove_whitespaces(category)}"]
         details['Url externa'] = [url]
         details['Texto do botão'] = ["Ver produto"]
         details['Short description'] = [specs]
-        details['Descrição'] = [remove_whitespaces(description)]
+        details['Descrição'] = [f"{remove_whitespaces(description)}\n\nDescrição Técnica\n\n{tecnical_details}{aditional_info}"]
         details['Imagens'] = [galery]
 
         # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
         print('> Salvando em arquivo...')
         dataToExcel(details, f'{nameOfFile}.csv')
+
     
     except Exception:
         driver.quit()
