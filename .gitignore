@@ -9,3 +9,7 @@ driver/
 link.html
 *.csv
 server.py
+chromedriver.exe
+*.exe
+*.wmv
+driver/

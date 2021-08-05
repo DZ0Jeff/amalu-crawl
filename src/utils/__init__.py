@@ -6,6 +6,7 @@ from selenium.common.exceptions import ElementNotInteractableException, NoSuchEl
 import os
 import requests
 import shutil
+import sys
 
 
 def getAmazonImageGalery(driver):
@@ -146,3 +147,15 @@ def get_magazine_specs(soap):
 
     except AttributeError:
         return ""
+
+
+def get_links():
+    filename = 'entrada.txt'
+    try:
+        with open(filename,'r') as links:
+            return links.readlines()
+
+    except FileNotFoundError:
+        with open(filename,'w'): pass
+        print(f"Insira um link da Amazon ou Magalu em '{filename}'!")
+        sys.exit()

@@ -4,4 +4,5 @@
 - [x] add product images in galery
 - [x] redirect afiliate links
 - [x] order template amazon compartibility
-- [ ] add tecnical description
+- [x] add tecnical description
+- [ ] add input txt

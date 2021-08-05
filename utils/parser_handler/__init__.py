@@ -15,7 +15,7 @@ def init_crawler(url):
         return BeautifulSoup(page.text, "lxml")
 
     except InvalidSchema:
-        print('Algo deu errado!')
+        print(f'Insira um link válido! link: {url}')
         return
 
     except ConnectionError:

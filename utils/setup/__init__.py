@@ -7,12 +7,12 @@ from utils.proxy import init_proxy
 from dotenv import load_dotenv
 
 
-def setSelenium(console=True, proxy=False):
+def setSelenium(root_path, console=True, proxy=False):
     # configuração do selenium
     chrome_options = Options()
     # ua = UserAgent()
     # userAgent = ua.random
-    load_dotenv()
+    load_dotenv(os.path.join(root_path, '.env'), verbose=True)
 
     if not console:
         chrome_options.add_argument('--headless')
@@ -40,8 +40,10 @@ def setSelenium(console=True, proxy=False):
     prefs = {"profile.default_content_setting_values.notifications": 2}
     chrome_options.add_experimental_option("prefs", prefs)
 
-    path = os.getenv('CHROMEDRIVER_PATH')
-
+    # driver paths
+    path = os.path.join(root_path, os.getenv('CHROMEDRIVER_PATH'))
+    # chrome_options.binary_location = resource_path(os.path.join(root_path, os.getenv('CHROME_LOCATION')))
+    
     if proxy:
         PROXY = init_proxy()
         chrome_options.add_argument('--proxy-server=%s' % PROXY)

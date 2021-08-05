@@ -1,12 +1,18 @@
-import sys
+import os
 import re
 from bs4 import NavigableString
+from flask import request
+from flask.helpers import send_file
 
-from src.utils import find_magalu_images, format_table, getAmazonImageGalery, get_specs, get_magazine_specs
+from src.utils import find_magalu_images, format_table, getAmazonImageGalery, get_links, get_specs, get_magazine_specs
+from src.models import init_app
 from utils.setup import setSelenium
 from utils.file_handler import dataToExcel
 from utils.parser_handler import init_crawler, init_parser, remove_whitespaces
 from utils.webdriver_handler import dynamic_page
+
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
@@ -34,7 +40,7 @@ def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
 
     except Exception: 
         print('> Falha ao extrair dados! contate do administrador do sistema...')
-        return
+        # return
 
     details = dict()
     details['Sku'] = [remove_whitespaces(sku)]
@@ -53,13 +59,14 @@ def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
     
     print('> Salvando resultados...')
     dataToExcel(details, f'{nameOfFile}.csv')
+    return f'{nameOfFile}.csv'
 
 
 def crawl_amazon(url, nameOfFile="Amazon"):
     
     url = str(url)
     print('> Iniciando Amazon crawler...')
-    driver = setSelenium(False)
+    driver = setSelenium(root_path=ROOT_DIR, console=False)
     try:
         driver.get(url)
         galery = getAmazonImageGalery(driver)
@@ -165,6 +172,7 @@ def crawl_amazon(url, nameOfFile="Amazon"):
         # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
         print('> Salvando em arquivo...')
         dataToExcel(details, f'{nameOfFile}.csv')
+        return f'{nameOfFile}.csv'
 
     
     except Exception:
@@ -172,17 +180,15 @@ def crawl_amazon(url, nameOfFile="Amazon"):
         raise
 
 
-def main():
-    """
-    crawl magazinevoce.com and amazon.com to scrape prices
-    """
-    link = sys.argv[1]
+def process_link(link):
+    link = link.replace('"','')
     if link != '' or 'pd_rd_w' or "pf_rd_p" or "pf_rd_r" or "pd_rd_wg" or "pd_rd_i":
         if link.split('/')[2] == "www.amazon.com.br":
-            crawl_amazon(link, "Amazon-image-2")
+            return crawl_amazon(link, "Amazon-image-2")
 
         elif link.split('/')[2] == "www.magazinevoce.com.br":
-            crawl_magazinevoce(link,'magalu-image-2')
+            return crawl_magazinevoce(link,'magalu-image-2')
+        
         else:
             print('> Link inválido! insira um link válido de um produto da amazon ou magazinevocê...')
     
@@ -190,5 +196,33 @@ def main():
         print('> Insira um link!')
 
 
+def main():
+    """
+    crawl magazinevoce.com and amazon.com to scrape prices
+    """
+    
+    links = get_links()
+
+    if len(links) == 0: print(f"Insira um link da Amazon ou Magalu em entrada.txt!"); return
+
+    for link in links:
+        process_link(link)
+
+
+app = init_app()
+
+
+@app.route('/product')
+def load_product():
+    targetLink = request.args.get('url')
+    try:
+        filename = process_link(targetLink)
+
+    except Exception as error:
+        return f'Um erro Aconteceu, verifique cokm o administador do sistema <br/> Erro: {error}'
+    
+    return send_file(os.path.join(ROOT_DIR, filename), as_attachment=True, mimetype='audio/mpeg', cache_timeout=-1)
+
+
 if __name__ == "__main__":
-    main()
+    app.run(debug=True)
