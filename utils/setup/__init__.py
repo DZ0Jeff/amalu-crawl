@@ -41,9 +41,11 @@ def setSelenium(root_path, console=True, proxy=False):
     chrome_options.add_experimental_option("prefs", prefs)
 
     # driver paths
-    path = os.path.join(root_path, os.getenv('CHROMEDRIVER_PATH'))
+    # path = os.path.join(root_path, os.getenv('CHROMEDRIVER_PATH'))
+    path = os.getenv('CHROMEDRIVER_PATH')
     # chrome_options.binary_location = resource_path(os.path.join(root_path, os.getenv('CHROME_LOCATION')))
-    
+    chrome_options.binary_location = os.getenv('GOOGLE_CHROME_BIN')
+
     if proxy:
         PROXY = init_proxy()
         chrome_options.add_argument('--proxy-server=%s' % PROXY)
