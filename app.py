@@ -212,6 +212,11 @@ def main():
 app = init_app()
 
 
+@app.route('/')
+def index():
+    return "Welcome to Amalu"
+
+
 @app.route('/product')
 def load_product():
     targetLink = request.args.get('url')
