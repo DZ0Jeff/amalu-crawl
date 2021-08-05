@@ -25,7 +25,7 @@ def getAmazonImageGalery(driver):
             print(f'> Erro ao pega dados da galeria')
             return
 
-    sleep(5)
+    sleep(2)
 
     images_container = driver.find_element_by_id('ivThumbs')
     buttons = images_container.find_elements_by_css_selector('.ivThumbImage')
@@ -42,7 +42,7 @@ def getAmazonImageGalery(driver):
         else:
             pass
         
-        sleep(3)
+        sleep(1)
         main_container = driver.find_element_by_id('ivLargeImage')
         image = main_container.find_element_by_tag_name('img').get_attribute('src')
 
