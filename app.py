@@ -182,13 +182,13 @@ def crawl_amazon(url, nameOfFile="Amazon"):
 
 
 def process_link(link):
+    print(link)
     link = link.replace('"','')
-    if link != '' or 'pd_rd_w' or "pf_rd_p" or "pf_rd_r" or "pd_rd_wg" or "pd_rd_i":
+    if link != '':
         if link.split('/')[2] == "www.amazon.com.br":
             return crawl_amazon(link, "Amazon")
 
         elif link.split('/')[2] == "www.magazinevoce.com.br":
-            print(link)
             return crawl_magazinevoce(link,'Magalu')
         
         else:
