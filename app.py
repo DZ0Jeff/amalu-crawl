@@ -10,6 +10,7 @@ from utils.setup import setSelenium
 from utils.file_handler import dataToExcel
 from utils.parser_handler import init_crawler, init_parser, remove_whitespaces
 from utils.webdriver_handler import dynamic_page
+import fnmatch
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -184,16 +185,19 @@ def process_link(link):
     link = link.replace('"','')
     if link != '' or 'pd_rd_w' or "pf_rd_p" or "pf_rd_r" or "pd_rd_wg" or "pd_rd_i":
         if link.split('/')[2] == "www.amazon.com.br":
-            return crawl_amazon(link, "Amazon-image-2")
+            return crawl_amazon(link, "Amazon")
 
         elif link.split('/')[2] == "www.magazinevoce.com.br":
-            return crawl_magazinevoce(link,'magalu-image-2')
+            print(link)
+            return crawl_magazinevoce(link,'Magalu')
         
         else:
             print('> Link inválido! insira um link válido de um produto da amazon ou magazinevocê...')
+            return
     
     else:
         print('> Insira um link!')
+        return
 
 
 def main():
@@ -223,11 +227,20 @@ def load_product():
     try:
         filename = process_link(targetLink)
 
+        if not filename:
+            return "Arquivo não baixado, contate o adminstrador!"
+
     except Exception as error:
         return f'Um erro Aconteceu, verifique cokm o administador do sistema <br/> Erro: {error}'
     
-    return send_file(os.path.join(ROOT_DIR, filename), as_attachment=True, mimetype='audio/mpeg', cache_timeout=-1)
+    return send_file(os.path.join(ROOT_DIR, filename), as_attachment=True, cache_timeout=-1)
 
+@app.route('/delete')
+def delete_product():
+    for root, dirs, files in os.walk('.'):
+        for name in files:
+            if fnmatch.fnmatch(name, ".csv"):
+                os.remove(name)
 
 if __name__ == "__main__":
     app.run()
