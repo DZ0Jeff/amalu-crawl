@@ -182,8 +182,8 @@ def crawl_amazon(url, nameOfFile="Amazon"):
 
 
 def process_link(link):
-    print("link: ", link)
     link = link.replace('"','')
+    print("link: ", link)
     if link != '':
         if link.split('/')[2] == "www.amazon.com.br":
             return crawl_amazon(link, "Amazon")
@@ -241,6 +241,8 @@ def delete_product():
         for name in files:
             if fnmatch.fnmatch(name, ".csv"):
                 os.remove(name)
+    
+    return "produtos deletados com sucesso!";
 
 if __name__ == "__main__":
     app.run()
