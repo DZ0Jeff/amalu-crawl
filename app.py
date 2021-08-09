@@ -25,7 +25,7 @@ def index():
         {
             'Routes': { 
                 '/amazon': 'Crawl amazon products, args: link of product', 
-                '/magazinei9bux': 'crawl magazinei9bux product details, args: link of product' 
+                '/magazinevoce': 'Crawl magazinei9bux product details, args: link of product' 
             } 
         }
     )
