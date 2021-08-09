@@ -120,6 +120,6 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile="Amazon"):
         return f'{nameOfFile}.csv'
 
     
-    except Exception:
+    except Exception as error:
         driver.quit()
-        raise
+        return str(error)
