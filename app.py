@@ -18,8 +18,6 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 app = init_app()
 executor = Executor(app)
 
-pending = []
-amazon_file = []
 
 @app.route('/')
 def index():
@@ -38,8 +36,11 @@ def amazon_download():
     delete_product('Amazon.csv')
     link = request.args.get('url')
 
-    if link == '' or not link.split('/')[2] == "www.amazon.com.br":
-        return 'Insira um link válido!'
+    if link == '':
+        return 'Insira um link'
+
+    if not link.split('/')[2] == "www.amazon.com.br":
+        return "Insira o um link válido!"
 
     executor.submit(crawl_amazon, link, ROOT_DIR, "Amazon")
     return redirect(url_for('amazon_get'))
@@ -64,7 +65,7 @@ def magazinei9bux_get():
 
     filename = crawl_magazinevoce(link,'Magalu')
 
-    if isinstance(filename, str):
+    if not isinstance(filename, str):
         return f"Um erro aconteceu: {filename}"
 
     return send_file(os.path.join(ROOT_DIR, filename), as_attachment=True, cache_timeout=-1)

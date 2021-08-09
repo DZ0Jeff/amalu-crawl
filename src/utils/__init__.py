@@ -46,7 +46,6 @@ def getAmazonImageGalery(driver):
         sleep(1)
         main_container = driver.find_element_by_id('ivLargeImage')
         image = main_container.find_element_by_tag_name('img').get_attribute('src')
-
         galery.append(image)
 
     galery = remove_duplicates_on_list(galery)
