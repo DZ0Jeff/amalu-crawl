@@ -1,3 +1,4 @@
+import fnmatch
 from time import sleep
 from time import sleep
 from utils.parser_handler import remove_duplicates_on_list, remove_whitespaces
@@ -159,3 +160,20 @@ def get_links():
         with open(filename,'w'): pass
         print(f"Insira um link da Amazon ou Magalu em '{filename}'!")
         sys.exit()
+
+
+def delete_all_products():
+    for root, dirs, files in os.walk('.'):
+        for name in files:
+            if fnmatch.fnmatch(name, ".csv"):
+                os.remove(name)
+    
+    return "produtos deletados com sucesso!";
+
+
+def delete_product(product):
+    if os.path.exists(product):
+        try:
+            os.remove(product)
+        except FileExistsError:
+            pass
