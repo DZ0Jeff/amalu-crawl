@@ -16,7 +16,7 @@ from src.models import init_app
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 app = init_app()
-CORS(app)
+CORS(app, expose_headers=["Content-Disposition"])
 executor = Executor(app)
 
 
@@ -69,7 +69,7 @@ def magazinei9bux_get():
     if not isinstance(filename, str):
         return f"Um erro aconteceu: {filename}"
 
-    return send_file(os.path.join(ROOT_DIR, filename), as_attachment=True, cache_timeout=-1)
+    return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
 
 
 if __name__ == "__main__":
