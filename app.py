@@ -1,14 +1,14 @@
 import os
+from time import sleep
 
 from flask import request, jsonify
 from flask.helpers import send_file, url_for
 from flask_executor import Executor
 from werkzeug.utils import redirect
-from time import sleep
+from flask_cors import CORS
 
 from src.models.Amazon import crawl_amazon
 from src.models.magazinei9bux import crawl_magazinevoce
-
 from src.utils import delete_product, get_links
 from src.models import init_app
 
@@ -16,6 +16,7 @@ from src.models import init_app
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 app = init_app()
+CORS(app)
 executor = Executor(app)
 
 
