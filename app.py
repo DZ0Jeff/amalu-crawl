@@ -1,15 +1,17 @@
 import os
 from time import sleep
+import sys
 
 from flask import request, jsonify
 from flask.helpers import send_file, url_for
 from flask_executor import Executor
 from werkzeug.utils import redirect
 from flask_cors import CORS
+from src.models.aliexpress import crawl_aliexpress
 
 from src.models.Amazon import crawl_amazon
 from src.models.magazinei9bux import crawl_magazinevoce
-from src.utils import delete_product, get_links
+from src.utils import delete_product
 from src.models import init_app
 
 
@@ -26,7 +28,8 @@ def index():
         {
             'Routes': { 
                 '/amazon': 'Crawl amazon products, args: link of product', 
-                '/magazinevoce': 'Crawl magazinei9bux product details, args: link of product' 
+                '/magazinevoce': 'Crawl magazinei9bux product details, args: link of product',
+                '/aliexpress': 'Crawl aliexpress product details, args: link of product'
             } 
         }
     )
@@ -45,6 +48,7 @@ def amazon_download():
 
     executor.submit(crawl_amazon, link, ROOT_DIR, "Amazon")
     return redirect(url_for('amazon_get'))
+
 
 @app.route('/amazonget')
 def amazon_get():
@@ -72,7 +76,22 @@ def magazinei9bux_get():
     return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
 
 
+@app.route('/aliexpress')
+def aliexpress_download():
+    delete_product('aliexpress.csv')
+    link = request.args.get('url')
+
+    if link == '' and not link.split('/')[2] == "www.magazinevoce.com.br":
+       return 'Insira um link válido!'
+
+    filename = crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile='aliexpress.csv')
+
+    if not isinstance(filename, str):
+        return f"Um erro aconteceu: {filename}"
+
+    return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
+
+
 if __name__ == "__main__":
     app.debug = True
-    app.run()
-
+    app.run()    

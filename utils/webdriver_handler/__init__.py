@@ -5,21 +5,29 @@ def scroll(driver):
     SCROLL_PAUSE_TIME = 20
 
     # Get scroll height
-    last_height = driver.execute_script("return document.body.scrollHeight")
+    # last_height = driver.execute_script("return document.body.scrollHeight")
 
-    while True:
-        # Scroll down to bottom
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    # while True:
+    #     # Scroll down to bottom
+    driver.execute_script("window.scrollTo(0, 1500);")
+    sleep(SCROLL_PAUSE_TIME)
 
-        # Wait to load page and increments one more second
-        SCROLL_PAUSE_TIME += 1
-        sleep(SCROLL_PAUSE_TIME)
+    #     # Wait to load page and increments one more second
+    #     SCROLL_PAUSE_TIME += 1
+    #     sleep(SCROLL_PAUSE_TIME)
 
-        # Calculate new scroll height and compare with last scroll height
-        new_height = driver.execute_script("return document.body.scrollHeight")
-        if new_height == last_height:
-            break
-        last_height = new_height
+    #     # Calculate new scroll height and compare with last scroll height
+    #     new_height = driver.execute_script("return document.body.scrollHeight")
+    #     if new_height == last_height:
+    #         break
+    #     last_height = new_height
+
+
+def smooth_scroll(driver):
+    scheight = .1
+    while scheight < 9.9:
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight/%s);" % scheight)
+        scheight += .01
 
 
 def dynamic_page(driver):
@@ -28,6 +36,16 @@ def dynamic_page(driver):
     # sleep(10)
     html = driver.find_element_by_tag_name('html')
     return html.get_attribute('outerHTML')
+
+
+def dynamic_page_with_scroll(driver):
+    # driver.get(url)
+    driver.implicitly_wait(220)
+    scroll(driver)
+    # sleep(10)
+    html = driver.find_element_by_tag_name('html')
+    return html.get_attribute('outerHTML')
+
 
 
 def check_tag(tag):
