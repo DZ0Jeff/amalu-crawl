@@ -2,8 +2,8 @@ from utils.parser_handler import init_parser
 from utils.file_handler import dataToExcel
 from utils.setup import setSelenium
 from utils.webdriver_handler import dynamic_page, scroll, smooth_scroll
-
-from selenium.common.exceptions import NoSuchElementException
+from time import sleep
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
 
 
 def crawl_aliexpress(url, root_path, nameOfFile):
@@ -15,9 +15,24 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         driver.execute_script("window.scrollTo(0, 1200);") 
         # smooth_scroll(driver)   
         print('> selecionando ficha tecníca...')
-        driver.find_element_by_xpath('//*[@id="product-detail"]/div[2]/div/div[1]/ul/li[3]/div').click()
+        sleep(3)
+        # select details
+        try:
+            driver.find_element_by_xpath('//*[@id="product-detail"]/div[2]/div/div[1]/ul/li[3]/div').click()
+        
+        except ElementClickInterceptedException:
+            driver.find_element_by_xpath('//*[@id="product-detail"]/div[2]/div/div[1]/ul/li[3]/div/span').click()
+        
         tecnical_content = driver.find_element_by_css_selector('.product-specs-list.util-clearfix').text
-        driver.find_element_by_xpath('//*[@id="product-detail"]/div[2]/div/div[1]/ul/li[1]/div').click()
+        
+        # return to description
+        try:
+            driver.find_element_by_xpath('//*[@id="product-detail"]/div[2]/div/div[1]/ul/li[1]/div').click()
+        
+        except ElementClickInterceptedException:
+            driver.find_element_by_xpath('//*[@id="product-detail"]/div[2]/div/div[1]/ul/li[1]/div/span').click()
+
+
         print('> procurando descrição...')
         smooth_scroll(driver)   
         src_code = dynamic_page(driver)
