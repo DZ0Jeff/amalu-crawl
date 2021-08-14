@@ -16,23 +16,16 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         # smooth_scroll(driver)   
         print('> selecionando ficha tecníca...')
         sleep(3)
+
         # select details
-        try:
-            driver.find_element_by_xpath('//*[@id="product-detail"]/div[2]/div/div[1]/ul/li[3]/div').click()
-        
-        except ElementClickInterceptedException:
-            driver.find_element_by_xpath('//*[@id="product-detail"]/div[2]/div/div[1]/ul/li[3]/div/span').click()
-        
+        navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
+        navlist = navbar.find_elements_by_tag_name('li')
+        navlist[2].click()
         tecnical_content = driver.find_element_by_css_selector('.product-specs-list.util-clearfix').text
         
         # return to description
-        try:
-            driver.find_element_by_xpath('//*[@id="product-detail"]/div[2]/div/div[1]/ul/li[1]/div').click()
+        navlist[0].click()
         
-        except ElementClickInterceptedException:
-            driver.find_element_by_xpath('//*[@id="product-detail"]/div[2]/div/div[1]/ul/li[1]/div/span').click()
-
-
         print('> procurando descrição...')
         smooth_scroll(driver)   
         src_code = dynamic_page(driver)
