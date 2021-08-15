@@ -14,7 +14,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             navlist[location].click()
         
         except ElementClickInterceptedException:
-            navlist[location].find_element_by_css_selector('tab-inner').click()
+            navlist[location].find_element_by_css_selector('.tab-inner').click()
 
 
     driver = setSelenium(root_path, False)
