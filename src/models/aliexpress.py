@@ -10,7 +10,7 @@ from selenium.common.exceptions import NoSuchElementException, ElementClickInter
 def crawl_aliexpress(url, root_path, nameOfFile):
 
 
-    def click_on_list(navlist, location, driver):
+    def click_on_list(navlist, location):
         try:
             print('Clicando...')
             # sleep(3)
@@ -44,11 +44,11 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         # select details
         navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
         navlist = navbar.find_elements_by_tag_name('li')
-        click_on_list(navlist, 2, driver)
+        click_on_list(navlist, 2)
         tecnical_content = driver.find_element_by_css_selector('.product-specs-list.util-clearfix').text
         
         # return to description
-        click_on_list(navlist, 0, driver)
+        click_on_list(navlist, 0)
         
         print('> procurando descrição...')
         smooth_scroll(driver)   
