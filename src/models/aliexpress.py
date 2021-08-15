@@ -122,4 +122,5 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     print('> Salvando em arquivo...')
     # [print(f"{index}: \t{content}") for index, content in product.items()]
     dataToExcel(product, nameOfFile)
-    print('> Finalizado!')
+    print(f'> Arquivo {nameOfFile} salvo com sucesso!')
+    return f'{nameOfFile}.csv'
