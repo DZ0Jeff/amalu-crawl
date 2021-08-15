@@ -24,7 +24,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
         except ElementClickInterceptedException:
             print('clicando 2 vez...')    
-            WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))).click()
+            WebDriverWait(navlist[location], 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))).click()
 
 
     driver = setSelenium(root_path, False)
