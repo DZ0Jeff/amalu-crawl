@@ -14,7 +14,7 @@ from selenium.webdriver.support import expected_conditions as EC
 def crawl_aliexpress(url, root_path, nameOfFile):
 
 
-    def click_on_list(navlist, location):
+    def click_on_list(navlist, location, driver):
         try:
             print('Clicando...')
             # sleep(3)
@@ -23,8 +23,9 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             target.click()
 
         except ElementClickInterceptedException:
-            print('clicando 2 vez...')    
-            WebDriverWait(navlist[location], 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))).click()
+            print('clicando 2 vez...')
+            print(navlist[location].get_attribute('outerHTML'))    
+            driver.execute_script("arguments[0].click();", WebDriverWait(navlist[location], 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))))
 
 
     driver = setSelenium(root_path, False)
@@ -40,12 +41,12 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         # select details
         navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
         navlist = navbar.find_elements_by_tag_name('li')
-        click_on_list(navlist, 2)
+        click_on_list(navlist, 2, driver)
         sleep(3)
         tecnical_content = driver.find_element_by_css_selector('.product-specs-list.util-clearfix').text
         
         # return to description
-        click_on_list(navlist, 0)
+        click_on_list(navlist, 0, driver)
         
         print('> procurando descrição...')
         smooth_scroll(driver)   
