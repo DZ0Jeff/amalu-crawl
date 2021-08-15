@@ -7,6 +7,16 @@ from selenium.common.exceptions import NoSuchElementException, ElementClickInter
 
 
 def crawl_aliexpress(url, root_path, nameOfFile):
+
+
+    def click_on_list(driver, location):
+        try:
+            navlist[location].click()
+        
+        except ElementClickInterceptedException:
+            navlist[location].find_element_by_css_selector('tab-inner').click()
+
+
     driver = setSelenium(root_path, False)
     driver.get(url)
     print('> iniciando...')
@@ -20,11 +30,11 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         # select details
         navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
         navlist = navbar.find_elements_by_tag_name('li')
-        navlist[2].click()
+        click_on_list(driver, 2)
         tecnical_content = driver.find_element_by_css_selector('.product-specs-list.util-clearfix').text
         
         # return to description
-        navlist[0].click()
+        click_on_list(0)
         
         print('> procurando descrição...')
         smooth_scroll(driver)   
