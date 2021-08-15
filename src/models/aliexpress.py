@@ -31,7 +31,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
                 except ElementClickInterceptedException:
                     print('clicando 4 vez...')
                     sleep(3)
-                    driver.find_element_by_xpath(f'//*[@id="product-detail"]/div[2]/div/div[1]/ul/li[3]/div').click()
+                    driver.find_element_by_xpath(f'/html/body/div[7]/div/div[3]/div[3]/div[2]/div[2]/div/div[1]/ul/li[3]/div').click()
 
 
 
