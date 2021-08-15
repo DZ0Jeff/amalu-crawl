@@ -23,15 +23,9 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             target.click()
 
         except ElementClickInterceptedException:
-            try:
-                print('clicando 2 vez...')
-                target = navlist[location].find_element_by_css_selector('.tab-inner')
-                sleep(3)
-                target.click()
+            print('clicando 2 vez...')    
+            WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))).click()
 
-            except ElementClickInterceptedException:
-                print('clicando 3 vez...')    
-                WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))).click()
 
     driver = setSelenium(root_path, False)
     driver.get(url)
@@ -47,6 +41,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
         navlist = navbar.find_elements_by_tag_name('li')
         click_on_list(navlist, 2)
+        sleep(3)
         tecnical_content = driver.find_element_by_css_selector('.product-specs-list.util-clearfix').text
         
         # return to description
