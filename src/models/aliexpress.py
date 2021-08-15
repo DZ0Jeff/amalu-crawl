@@ -4,7 +4,11 @@ from utils.setup import setSelenium
 from utils.webdriver_handler import dynamic_page, scroll, smooth_scroll
 from time import sleep
 import sys
+
 from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 
 
 def crawl_aliexpress(url, root_path, nameOfFile):
@@ -27,9 +31,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
             except ElementClickInterceptedException:
                 print('clicando 3 vez...')    
-                target = navlist[location].find_element_by_css_selector('.tab-inner-text')
-                sleep(3)
-                target.click()
+                WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))).click()
 
     driver = setSelenium(root_path, False)
     driver.get(url)
