@@ -13,24 +13,24 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     def click_on_list(navlist, location, driver):
         try:
             print('Clicando...')
-            sleep(3)
+            # sleep(3)
             navlist[location].click()
         
         except ElementClickInterceptedException:
             try:
                 print('clicando 2 vez...')
-                sleep(3)
+                # sleep(3)
                 navlist[location].find_element_by_css_selector('.tab-inner').click()
 
             except ElementClickInterceptedException:
                 try:
                     print('clicando 3 vez...')
-                    sleep(3)
+                    # sleep(3)
                     navlist[location].find_element_by_css_selector('.tab-inner-text').click()
 
                 except ElementClickInterceptedException:
                     print('clicando 4 vez...')
-                    sleep(3)
+                    # sleep(3)
                     driver.find_element_by_xpath(f'/html/body/div[7]/div/div[3]/div[3]/div[2]/div[2]/div/div[1]/ul/li[3]/div').click()
 
 
