@@ -24,7 +24,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
         except ElementClickInterceptedException:
             print('clicando 2 vez...')
-            print(navlist[location].get_attribute('outerHTML'))    
+            # print(navlist[location].get_attribute('outerHTML'))    
             driver.execute_script("arguments[0].click();", WebDriverWait(navlist[location], 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))))
 
 
@@ -68,11 +68,12 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     # category
     category = url.split('/')[2].split('.')[1]
 
-    # sku
+    # Sku
     try:
         sku = url.split('sku_id')[-1].split('%22')[2]
-    except Exception:
-        return "Sku não localizada!, contate o administrador!"
+    
+    except Exception as error:
+        return f"Sku não localizada!, erro: {error} \ncontate o administrador!"
 
     # name
     try:
