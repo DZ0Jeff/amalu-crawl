@@ -9,7 +9,7 @@ from selenium.common.exceptions import NoSuchElementException, ElementClickInter
 def crawl_aliexpress(url, root_path, nameOfFile):
 
 
-    def click_on_list(driver, location):
+    def click_on_list(navlist, location):
         try:
             print('Clicando...')
             navlist[location].click()
@@ -20,8 +20,14 @@ def crawl_aliexpress(url, root_path, nameOfFile):
                 navlist[location].find_element_by_css_selector('.tab-inner').click()
 
             except ElementClickInterceptedException:
-                print('clicando 3 vez...')
-                navlist[location].find_element_by_css_selector('.tab-inner-text').click()
+                try:
+                    print('clicando 3 vez...')
+                    navlist[location].find_element_by_css_selector('.tab-inner-text').click()
+
+                except ElementClickInterceptedException:
+                    print('clicando 4 vez...')
+                    navlist[location].find_element_by_xpath('//*[@id="product-detail"]/div[2]/div/div[1]/ul/li[3]/div').click()
+
 
 
     driver = setSelenium(root_path, False)
@@ -37,11 +43,11 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         # select details
         navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
         navlist = navbar.find_elements_by_tag_name('li')
-        click_on_list(driver, 2)
+        click_on_list(navlist, 2)
         tecnical_content = driver.find_element_by_css_selector('.product-specs-list.util-clearfix').text
         
         # return to description
-        click_on_list(0)
+        click_on_list(navlist, 0)
         
         print('> procurando descrição...')
         smooth_scroll(driver)   
