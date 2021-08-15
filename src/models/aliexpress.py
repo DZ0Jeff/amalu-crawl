@@ -3,6 +3,7 @@ from utils.file_handler import dataToExcel
 from utils.setup import setSelenium
 from utils.webdriver_handler import dynamic_page, scroll, smooth_scroll
 from time import sleep
+import sys
 from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
 
 
@@ -63,6 +64,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         # print('Elemento não achado')
         # return
         raise
+        sys.exit()
 
     print('> Extraíndo resultados...')
     soap = init_parser(src_code)
