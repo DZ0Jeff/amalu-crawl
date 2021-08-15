@@ -84,13 +84,19 @@ def aliexpress_download():
     if link == '' and not link.split('/')[2] == "www.magazinevoce.com.br":
        return 'Insira um link válido!'
 
-    filename = crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile='aliexpress.csv')
+    executor.submit(crawl_aliexpress, link, ROOT_DIR, "aliexpress.csv")
 
-    if not isinstance(filename, str):
-        return f"Um erro aconteceu: {filename}"
+    return redirect(url_for('aliexpress_get'))
 
-    return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
 
+@app.route('/aliexpressget')
+def aliexpress_get():
+    filename = 'aliexpress.csv'
+    if os.path.exists(filename):
+        return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
+
+    sleep(5)
+    return redirect(url_for('aliexpress_get'))
 
 
 if __name__ == "__main__":
