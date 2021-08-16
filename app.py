@@ -78,19 +78,25 @@ def magazinei9bux_get():
 
 @app.route('/aliexpress')
 def aliexpress_download():
-    delete_product('aliexpress.csv')
+    name_file = 'aliexpress.csv'
+    delete_product(name_file)
     link = request.args.get('url')
 
-    if link == '' and not link.split('/')[2] == "www.magazinevoce.com.br":
+    if link == '' and link.split('/')[2] == "pt.aliexpress.com.br":
        return 'Insira um link válido!'
 
-    filename = crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile='aliexpress.csv')
+    executor.submit(crawl_aliexpress, url=link, root_path=ROOT_DIR, nameOfFile=name_file)
+    return redirect(url_for('aliexpress_get'))
 
-    if not isinstance(filename, str):
-        return f"Um erro aconteceu: {filename}"
 
-    return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
+@app.get('/aliexpressget')
+def aliexpress_get():
+    filename = 'aliexpress.csv'
+    if os.path.exists(filename):
+        return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
 
+    sleep(5)
+    return redirect(url_for('amazon_get'))
 
 
 if __name__ == "__main__":
