@@ -5,7 +5,7 @@ from utils.webdriver_handler import dynamic_page, scroll, smooth_scroll
 from time import sleep
 import sys
 
-from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
+from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -55,10 +55,9 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     
     except Exception:
         driver.quit()
-        # print('Elemento não achado')
-        # return
-        raise
-        sys.exit()
+        print('Elemento não achado')
+        return
+
 
     print('> Extraíndo resultados...')
     soap = init_parser(src_code)
@@ -70,6 +69,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
     # Sku
     try:
+        print(url)
         sku = url.split('sku_id')[-1].split('%22')[2]
     
     except Exception as error:
