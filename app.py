@@ -95,8 +95,8 @@ def aliexpress_get():
     if os.path.exists(filename):
         return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
 
-    sleep(5)
-    return redirect(url_for('amazon_get'))
+    sleep(10)
+    return redirect(url_for('aliexpress_get'))
 
 
 if __name__ == "__main__":

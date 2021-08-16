@@ -28,7 +28,6 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             # print(navlist[location].get_attribute('outerHTML'))    
             driver.execute_script("arguments[0].click();", WebDriverWait(navlist[location], 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))))
 
-    telegram = TelegramBot(root_path)
     driver = setSelenium(root_path, False)
     driver.get(url)
     print('> iniciando...')
@@ -57,8 +56,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     except Exception as error:
         driver.quit()
         print('Elemento não achado')
-        telegram.send_message(error)
-        return
+        raise
 
 
     print('> Extraíndo resultados...')
@@ -71,8 +69,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
     # Sku
     try:
-        print(url)
-        sku = url.split('sku_id')[-1].split('%22')[2]
+        sku = url.split('/')[-1].split('.')[0]
     
     except Exception as error:
         return f"Sku não localizada!, erro: {error} \ncontate o administrador!"
@@ -126,4 +123,4 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     # [print(f"{index}: \t{content}") for index, content in product.items()]
     dataToExcel(product, nameOfFile)
     print(f'> Arquivo {nameOfFile} salvo com sucesso!')
-    return f'{nameOfFile}.csv'
+    return nameOfFile
