@@ -87,7 +87,11 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         price = price.split('-')[0]
     
     except Exception:
-        price = ""
+        try:
+            price = soap.find('span', class_='uniform-banner-box-price').get_text()
+
+        except AttributeError:
+            price = ""
 
     # descryption
     descryption = ""
