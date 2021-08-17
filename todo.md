@@ -19,4 +19,12 @@
 - [x] extract category
 - [x] extract external url
 - [x] view scoll content
-- [ ] view csv in correct order
+- [x] view csv in correct order
+
+## amazon
+
+- [ ] add promotional price
+
+## magazinevoce
+
+- [ ] add prmotional price

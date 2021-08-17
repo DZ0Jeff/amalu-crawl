@@ -81,17 +81,24 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     except AttributeError:
         return "Erro ao extrair, contate o administrador!"
 
-    #  name
+    #  price
     try:
-        price = soap.find('span', class_="product-price-value").get_text()
-        price = price.split('-')[0]
+        price = soap.find('div', class_="product-price-original").get_text()
+        promotiona_price = soap.find('div', class_="product-price-current").get_text()
     
-    except Exception:
+    except AttributeError:
         try:
-            price = soap.find('span', class_='uniform-banner-box-price').get_text()
+            price = soap.find('span', class_="product-price-value").get_text()
+    
+        except Exception:
+            try:
+                price = soap.find('span', class_='uniform-banner-box-price').get_text()
 
-        except AttributeError:
-            price = ""
+            except AttributeError:
+                price = ""
+
+        finally:
+            promotiona_price = ''
 
     # descryption
     descryption = ""
@@ -113,10 +120,16 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
 
     product['Tipo'] = ["external"]
-    product["Categoria"] = [category]
+    product["Categorias"] = [category]
     product["Sku"] = [sku]
     product["Nome"] = [title]
-    product["Preço"] = [price]
+    if promotiona_price == '':
+        product["Preço de venda"] = [price]
+        product["Preço regular"] = [promotiona_price]
+    else:
+        product["Preço de venda"] = [promotiona_price]
+        product["Preço regular"] = [price]
+
     product['Texto do botão'] = ["Ver produto"]
     product["Url externa"] = [url]
     product["Descrição curta"] = [tecnical_content]
