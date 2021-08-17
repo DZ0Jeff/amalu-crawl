@@ -57,7 +57,8 @@ def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
 
     
     # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
-    
+    # print(price)
+    # print(promotional_price)
     print('> Salvando resultados...')
     dataToExcel(details, f'{nameOfFile}.csv')
     return f'{nameOfFile}.csv'

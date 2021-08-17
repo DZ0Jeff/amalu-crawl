@@ -138,8 +138,8 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     product["Images"] = [", ".join(img_src)]
     
     print('> Salvando em arquivo...')
-    print(price)
-    print(promotiona_price)
+    # print(price)
+    # print(promotiona_price)
     # [print(f"{index}: \t{content}") for index, content in product.items()]
     dataToExcel(product, nameOfFile)
     print(f'> Arquivo {nameOfFile} salvo com sucesso!')
