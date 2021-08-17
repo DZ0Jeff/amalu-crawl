@@ -89,16 +89,17 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     except AttributeError:
         try:
             price = str(soap.find('span', class_="product-price-value").get_text()).strip('-')[0]
-    
+            promotiona_price = ""
+
         except Exception:
+            # Banner
             try:
                 price = soap.find('span', class_='uniform-banner-box-price').get_text()
+                promotiona_price = soap.find('span', class_="uniform-banner-box-discounts").get_text()
 
             except AttributeError:
                 price = ""
-
-        finally:
-            promotiona_price = ''
+                promotiona_price = ''
 
     # descryption
     descryption = ""
@@ -137,6 +138,8 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     product["Images"] = [", ".join(img_src)]
     
     print('> Salvando em arquivo...')
+    print(price)
+    print(promotiona_price)
     # [print(f"{index}: \t{content}") for index, content in product.items()]
     dataToExcel(product, nameOfFile)
     print(f'> Arquivo {nameOfFile} salvo com sucesso!')
