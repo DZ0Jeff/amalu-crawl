@@ -83,12 +83,12 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
     #  price
     try:
-        price = soap.find('div', class_="product-price-original").get_text()
-        promotiona_price = soap.find('div', class_="product-price-current").get_text()
+        price = str(soap.find('div', class_="product-price-original").get_text()).split('-')[0]
+        promotiona_price = str(soap.find('div', class_="product-price-current").get_text()).split('-')[0]
     
     except AttributeError:
         try:
-            price = soap.find('span', class_="product-price-value").get_text()
+            price = str(soap.find('span', class_="product-price-value").get_text()).strip('-')[0]
     
         except Exception:
             try:
