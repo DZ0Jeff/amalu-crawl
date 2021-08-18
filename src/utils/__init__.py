@@ -17,14 +17,20 @@ def getAmazonImageGalery(driver):
     try:
         modal = driver.find_element_by_css_selector('.a-dynamic-image.a-stretch-horizontal')
         modal.click()
+
     except NoSuchElementException:
         try:
-            modal = driver.find_element_by_css_selector('.a-dynamic-image.a-stretch-horizontal')
+            modal = driver.find_element_by_id('landingImage')
             modal.click()
         
-        except Exception as erro:
-            print(f'> Erro ao pega dados da galeria')
-            return
+        except NoSuchElementException:
+            try:
+                modal = driver.find_element_by_id('magnifierLens')
+                modal.click()
+
+            except Exception as erro:
+                print(f'> Erro ao pega dados da galeria, erro: {erro}')
+                return
 
     sleep(2)
 

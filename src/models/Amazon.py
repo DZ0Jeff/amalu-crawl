@@ -98,14 +98,25 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile="Amazon"):
                 price = remove_whitespaces(raw_price)
 
             except Exception:
-                price = ""
+                try:
+                    price = soap.find('span', id="price_inside_buybox").get_text()
 
+                except Exception:
+                    price = ""
+
+        # promotional price
+        try:
+            promotional_price = soap.find('td', class_="a-span12 a-color-secondary a-size-base").text
+
+        except AttributeError:
+            promotional_price = ""
 
         details = dict()
         details['Type'] = ["external"]
         details['SKU'] = [remove_whitespaces(ean)]
         details['Nome'] = [remove_whitespaces(title)]
-        details['Preço'] = [price]
+        details['Preço Promocional'] = [remove_whitespaces(promotional_price)]
+        details['Preço'] = [remove_whitespaces(price)]
         details['Categorias'] = [f"{store} > {remove_whitespaces(category)}"]
         details['Url externa'] = [url]
         details['Texto do botão'] = ["Ver produto"]
