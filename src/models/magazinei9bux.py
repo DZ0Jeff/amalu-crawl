@@ -47,8 +47,8 @@ def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
         details['Preço promocional'] = [remove_whitespaces(promotional_price)]
         details['Preço'] = [remove_whitespaces(price)]
     else:
-        details['Preço promocional'] = [remove_whitespaces(price)]
-        details['Preço'] = [remove_whitespaces(promotional_price)]
+        details['Preço promocional'] = [remove_whitespaces(promotional_price)]
+        details['Preço'] = [remove_whitespaces(price)]
     details['Url Externa'] = [url]
     details['Texto do botão'] = ["Ver produto"]
     details['Short description'] = [specs]

@@ -125,8 +125,8 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     product["Sku"] = [sku]
     product["Nome"] = [title]
     if promotiona_price == '':
-        product["Preço promocional"] = [price]
-        product["Preço"] = [promotiona_price]
+        product["Preço promocional"] = [promotiona_price] 
+        product["Preço"] = [price]
     else:
         product["Preço promocional"] = [promotiona_price]
         product["Preço"] = [price]
