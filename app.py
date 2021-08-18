@@ -17,6 +17,7 @@ from src.models import init_app
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+
 app = init_app()
 CORS(app, expose_headers=["Content-Disposition"])
 executor = Executor(app)
