@@ -39,7 +39,9 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         sleep(3)
 
         # select details
-        navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
+        driver.save_screenshot('error.png')
+        navcontainer = driver.find_elements_by_css_selector('.detail-tab-bar')
+        navbar = navcontainer[-1]
         navlist = navbar.find_elements_by_tag_name('li')
         click_on_list(navlist, 2, driver)
         sleep(3)

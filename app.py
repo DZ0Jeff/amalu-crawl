@@ -111,6 +111,15 @@ def aliexpress_get():
     return redirect(url_for('aliexpress_get'))
 
 
+@app.route('/error')
+def error_image():
+    filename = 'error.png'
+    if os.path.exists(filename):
+        return send_file(os.path.join(ROOT_DIR, filename), mimetype='image/png', attachment_filename=filename, as_attachment=True, cache_timeout=-1)
+    
+    return "Screenshot nao disponível!"
+    
+
 if __name__ == "__main__":
     app.debug = True
     app.run()    
