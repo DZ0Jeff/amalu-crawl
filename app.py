@@ -99,21 +99,16 @@ def aliexpress_download():
 def aliexpress_get():
     filename = 'aliexpress.csv'
 
-    if not executor.futures.done('calc_power'):
+    if not executor.futures.done('aliexpress'):
         sleep(10)
-        # redirect_limit.append(0)
-        # print('Limit: ', len(redirect_limit))
         return redirect(url_for('aliexpress_get')) 
 
-    future = executor.futures.pop('calc_power')
+    future = executor.futures.pop('aliexpress')
     if not future.result():
         if os.path.exists(filename):
             return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
     else:
         return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!"
-
-    # if len(redirect_limit) >= 10:
-    #     return "Arquivo não achado ou algum erro aconteceu...."
 
 
 @app.route('/error')
