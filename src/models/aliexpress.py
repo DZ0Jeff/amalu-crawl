@@ -29,7 +29,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
     
     def explicity_wait_by_css_selector(element, selector, secs=20):
-        return WebDriverWait(element, secs).until(EC.alert_is_present((By.CSS_SELECTOR, selector)))
+        return WebDriverWait(element, secs).until(EC.element_to_be_selected((By.CSS_SELECTOR, selector)))
 
 
     print('> iniciando...')
@@ -44,10 +44,12 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     try:
         # select details
         print('Selecting navbar')
-        navbar = explicity_wait_by_css_selector(driver, '.detail-tab-bar')
-        # print(raw_navbar.text)
-        # navbar = raw_navbar[-1]
-        # navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
+        explicity_wait_by_css_selector(driver)
+        try:
+            navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
+        except IndexError:
+            navbar = driver.find_element_by_css_selector('.detail-tab-bar')
+
         print('Selecting elements on list...')
         navlist = navbar.find_elements_by_tag_name('li')
         print('Clicando em detalhes')
