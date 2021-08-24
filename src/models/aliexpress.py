@@ -54,7 +54,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     
     except Exception as error:
         driver.quit()
-        print('Elemento não achado')
+        print(f'> Erro: {error}')
         raise
 
 
