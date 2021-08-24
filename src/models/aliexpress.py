@@ -28,8 +28,8 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             driver.execute_script("arguments[0].click();", WebDriverWait(navlist[location], 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))))
 
     
-    def explicity_wait_by_css_selector(element, selector):
-        return WebDriverWait(element, 20).until(EC.alert_is_present((By.CSS_SELECTOR, selector)))
+    def explicity_wait_by_css_selector(element, selector, secs=20):
+        return WebDriverWait(element, secs).until(EC.alert_is_present((By.CSS_SELECTOR, selector)))
 
 
     print('> iniciando...')
@@ -39,12 +39,15 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     driver.execute_script("window.scrollTo(0, 1200);") 
     # smooth_scroll(driver)   
     print('> selecionando ficha tecníca...')
-    sleep(5)
+    sleep(3)
 
     try:
         # select details
         print('Selecting navbar')
-        navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
+        raw_navbar = explicity_wait_by_css_selector(driver, '.detail-tab-bar')
+        print(raw_navbar.get_attribute('outerHTML'))
+        navbar = raw_navbar[-1]
+        # navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
         print('Selecting elements on list...')
         navlist = navbar.find_elements_by_tag_name('li')
         print('Clicando em detalhes')
