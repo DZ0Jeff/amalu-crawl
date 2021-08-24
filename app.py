@@ -90,6 +90,7 @@ def aliexpress_download():
     if link == '' and link.split('/')[2] == "pt.aliexpress.com.br":
        return 'Insira um link válido!'
 
+    print('A iniciar processo...')
     executor.submit(crawl_aliexpress, url=link, root_path=ROOT_DIR, nameOfFile=name_file)
     return redirect(url_for('aliexpress_get'))
 

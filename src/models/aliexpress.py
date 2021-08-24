@@ -2,7 +2,6 @@ from utils.parser_handler import init_parser
 from utils.file_handler import dataToExcel
 from utils.setup import setSelenium
 from utils.webdriver_handler import dynamic_page, smooth_scroll
-from utils.telegram import TelegramBot
 from time import sleep
 
 
@@ -28,9 +27,9 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             # print(navlist[location].get_attribute('outerHTML'))    
             driver.execute_script("arguments[0].click();", WebDriverWait(navlist[location], 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))))
 
+    print('> iniciando...')
     driver = setSelenium(root_path, False)
     driver.get(url)
-    print('> iniciando...')
 
     try:
         driver.execute_script("window.scrollTo(0, 1200);") 
