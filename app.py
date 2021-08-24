@@ -1,6 +1,5 @@
 import os
 from time import sleep
-import sys
 
 from flask import request, jsonify
 from flask.helpers import send_file, url_for
@@ -103,7 +102,7 @@ def aliexpress_get():
         return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
 
     if len(redirect_limit) >= 15:
-        return "Arquivo nõ achado ou algum erro aconteceu...."
+        return "Arquivo não achado ou algum erro aconteceu...."
 
     sleep(10)
     redirect_limit.append(0)
@@ -118,7 +117,7 @@ def error_image():
         return send_file(os.path.join(ROOT_DIR, filename), mimetype='image/png', attachment_filename=filename, as_attachment=True, cache_timeout=-1)
     
     return "Screenshot nao disponível!"
-    
+
 
 if __name__ == "__main__":
     app.debug = True
