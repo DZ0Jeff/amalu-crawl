@@ -103,10 +103,11 @@ def aliexpress_get():
         sleep(10)
         return redirect(url_for('aliexpress_get')) 
 
-    future = executor.futures.pop('aliexpress_crawl')
-    if not future.result():
-        if os.path.exists(filename):
-            return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
+    future = executor.futures.pop('aliexpress_crawl')    
+    if os.path.exists(filename):
+        print(future.result())
+        return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
+    
     else:
         return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!"
 
