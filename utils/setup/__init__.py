@@ -1,7 +1,6 @@
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-# from fake_useragent import UserAgent
 from utils.build import resource_path
 from utils.proxy import init_proxy
 from dotenv import load_dotenv
@@ -10,8 +9,6 @@ from dotenv import load_dotenv
 def setSelenium(root_path, console=True, proxy=False):
     # configuração do selenium
     chrome_options = Options()
-    # ua = UserAgent()
-    # userAgent = ua.random
     load_dotenv(os.path.join(root_path, '.env'), verbose=True)
 
     if not console:
@@ -25,25 +22,26 @@ def setSelenium(root_path, console=True, proxy=False):
     chrome_options.add_experimental_option("prefs", {
         "profile.default_content_setting_values.notifications": 2
     })
-    # evitar detecção anti-bot
-    # chrome_options.add_argument(f'user-agent={userAgent}')
 
-    # chrome_options.add_argument("user-data-dir=Pessoa_1") 
+    # adicionar idioma
+    chrome_options.AddArguments("--lang=pt-br")
+    chrome_options.add_experimental_option('prefs', {'intl.accept_languages': 'pt-br, pt_BR'})
+
+    # evitar detecção anti-bot
     chrome_options.add_argument(f'user-agent=Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36')
     chrome_options.add_argument("--disable-blink-features")
     chrome_options.add_argument('--disable-blink-features=AutomationControlled')
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option('useAutomationExtension', False)
     chrome_options.add_experimental_option("detach", True)
+
     # desabilitar o log do chrome
     chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
     prefs = {"profile.default_content_setting_values.notifications": 2}
     chrome_options.add_experimental_option("prefs", prefs)
 
     # driver paths
-    # path = os.path.join(root_path, os.getenv('CHROMEDRIVER_PATH'))
     path = os.getenv('CHROMEDRIVER_PATH')
-    # chrome_options.binary_location = resource_path(os.path.join(root_path, os.getenv('CHROME_LOCATION')))
     chrome_options.binary_location = os.getenv('GOOGLE_CHROME_BIN')
 
     if proxy:
