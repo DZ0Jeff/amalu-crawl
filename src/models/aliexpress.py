@@ -1,8 +1,8 @@
-from utils.telegram import TelegramBot
 from utils.parser_handler import init_parser
 from utils.file_handler import dataToExcel
 from utils.setup import setSelenium
 from utils.webdriver_handler import dynamic_page, smooth_scroll
+from utils.telegram import TelegramBot
 from time import sleep
 
 
@@ -28,41 +28,25 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             # print(navlist[location].get_attribute('outerHTML'))    
             driver.execute_script("arguments[0].click();", WebDriverWait(navlist[location], 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))))
 
-    
-    def explicity_wait_by_css_selector(element, selector, secs=20):
-        return WebDriverWait(element, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
-
-
-    print('> iniciando...')
-    telegram = TelegramBot()
     driver = setSelenium(root_path, False)
     driver.get(url)
-    driver.implicitly_wait(10)
-
-    driver.execute_script("window.scrollTo(0, 1200);") 
-    # smooth_scroll(driver)   
-    print('> selecionando ficha tecníca...')
-    sleep(3)
+    print('> iniciando...')
 
     try:
-        # select details
-        print('Selecting navbar')
-        # explicity_wait_by_css_selector(driver, '.detail-tab-bar')
-        try:
-            navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
-            print('Selecting elements on list...')
-            navlist = navbar.find_elements_by_tag_name('li')
-            print('Clicando em detalhes')
-            click_on_list(navlist, 2, driver)
-            sleep(3)
-            tecnical_content = driver.find_element_by_css_selector('.product-specs-list.util-clearfix').text
-            # return to description
-            print('clicando em descrição...')
-            click_on_list(navlist, 0, driver)
+        driver.execute_script("window.scrollTo(0, 1200);") 
+        # smooth_scroll(driver)   
+        print('> selecionando ficha tecníca...')
+        sleep(3)
 
-        except IndexError:
-            print('seção não identificada, extraindo....')
+        # select details
+        navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
+        navlist = navbar.find_elements_by_tag_name('li')
+        click_on_list(navlist, 2, driver)
+        sleep(3)
+        tecnical_content = driver.find_element_by_css_selector('.product-specs-list.util-clearfix').text
         
+        # return to description
+        click_on_list(navlist, 0, driver)
         
         print('> procurando descrição...')
         smooth_scroll(driver)   
@@ -71,7 +55,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     
     except Exception as error:
         driver.quit()
-        print(f'> Erro: {error}')
+        print('Elemento não achado')
         raise
 
 
@@ -154,8 +138,8 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     product["Images"] = [", ".join(img_src)]
     
     print('> Salvando em arquivo...')
-    print(price)
-    print(promotiona_price)
+    # print(price)
+    # print(promotiona_price)
     # [print(f"{index}: \t{content}") for index, content in product.items()]
     dataToExcel(product, nameOfFile)
     print(f'> Arquivo {nameOfFile} salvo com sucesso!')
