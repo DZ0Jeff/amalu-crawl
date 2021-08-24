@@ -44,7 +44,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     try:
         # select details
         print('Selecting navbar')
-        explicity_wait_by_css_selector(driver)
+        explicity_wait_by_css_selector(driver, '.detail-tab-bar')
         try:
             navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
         except IndexError:
