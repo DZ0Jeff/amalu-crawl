@@ -40,7 +40,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     driver.execute_script("window.scrollTo(0, 1200);") 
     # smooth_scroll(driver)   
     print('> selecionando ficha tecníca...')
-    sleep(10)
+    sleep(3)
 
     try:
         # select details
@@ -48,19 +48,19 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         # explicity_wait_by_css_selector(driver, '.detail-tab-bar')
         try:
             navbar = driver.find_elements_by_css_selector('div.detail-tab-bar')[-1]
-        except IndexError:
-            navbar = driver.find_element_by_css_selector('div.detail-tab-bar')
+            print('Selecting elements on list...')
+            navlist = navbar.find_elements_by_tag_name('li')
+            print('Clicando em detalhes')
+            click_on_list(navlist, 2, driver)
+            sleep(3)
+            tecnical_content = driver.find_element_by_css_selector('.product-specs-list.util-clearfix').text
+            # return to description
+            print('clicando em descrição...')
+            click_on_list(navlist, 0, driver)
 
-        print('Selecting elements on list...')
-        navlist = navbar.find_elements_by_tag_name('li')
-        print('Clicando em detalhes')
-        click_on_list(navlist, 2, driver)
-        sleep(3)
-        tecnical_content = driver.find_element_by_css_selector('.product-specs-list.util-clearfix').text
+        except IndexError:
+            print('seção não identificada, extraindo....')
         
-        # return to description
-        print('clicando em descrição...')
-        click_on_list(navlist, 0, driver)
         
         print('> procurando descrição...')
         smooth_scroll(driver)   
