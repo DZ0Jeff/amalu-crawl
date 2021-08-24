@@ -1,3 +1,4 @@
+from utils.telegram import TelegramBot
 from utils.parser_handler import init_parser
 from utils.file_handler import dataToExcel
 from utils.setup import setSelenium
@@ -33,6 +34,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
 
     print('> iniciando...')
+    telegram = TelegramBot()
     driver = setSelenium(root_path, False)
     driver.get(url)
     driver.implicitly_wait(10)

@@ -29,3 +29,8 @@ class TelegramBot:
 
         else:
             print('> Mensagem enviada com sucesso!')
+
+    def send_file(self, filename):
+        if os.path.exists(filename):
+            with open(filename, 'rb') as file:
+                self.bot.send_document(chat_id=self.CHAT_ID, document=file, filename=filename)
