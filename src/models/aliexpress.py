@@ -35,6 +35,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     print('> iniciando...')
     driver = setSelenium(root_path, False)
     driver.get(url)
+    driver.implicitly_wait(10)
 
     driver.execute_script("window.scrollTo(0, 1200);") 
     # smooth_scroll(driver)   
