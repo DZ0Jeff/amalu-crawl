@@ -33,7 +33,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     print('> iniciando...')
 
     try:
-        driver.execute_script("window.scrollTo(0, 1200);") 
+        smooth_scroll(driver) 
         # smooth_scroll(driver)   
         print('> selecionando ficha tecníca...')
         sleep(3)
