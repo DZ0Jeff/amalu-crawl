@@ -91,7 +91,7 @@ def aliexpress_download():
        return 'Insira um link válido!'
 
     print('A iniciar processo...')
-    executor.submit_stored('aliexpress', crawl_aliexpress, url=link, root_path=ROOT_DIR, nameOfFile=name_file)
+    executor.submit_stored('aliexpress_crawl', crawl_aliexpress, url=link, root_path=ROOT_DIR, nameOfFile=name_file)
     return redirect(url_for('aliexpress_get'))
 
 
@@ -99,11 +99,11 @@ def aliexpress_download():
 def aliexpress_get():
     filename = 'aliexpress.csv'
 
-    if not executor.futures.done('aliexpress'):
+    if not executor.futures.done('aliexpress_crawl'):
         sleep(10)
         return redirect(url_for('aliexpress_get')) 
 
-    future = executor.futures.pop('aliexpress')
+    future = executor.futures.pop('aliexpress_crawl')
     if not future.result():
         if os.path.exists(filename):
             return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
