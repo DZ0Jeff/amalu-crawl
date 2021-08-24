@@ -33,13 +33,13 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     print('> iniciando...')
 
     try:
+        driver.save_screenshot('error.png')
         smooth_scroll(driver) 
         # smooth_scroll(driver)   
         print('> selecionando ficha tecníca...')
         sleep(3)
 
         # select details
-        driver.save_screenshot('error.png')
         navcontainer = driver.find_elements_by_css_selector('.detail-tab-bar')
         navbar = navcontainer[-1]
         navlist = navbar.find_elements_by_tag_name('li')

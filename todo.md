@@ -20,11 +20,12 @@
 - [x] extract external url
 - [x] view scoll content
 - [x] view csv in correct order
+- [ ] convert price Us to Pt-br
 
 ## amazon
 
-- [ ] add promotional price
+- [x] add promotional price
 
 ## magazinevoce
 
-- [ ] add prmotional price
+- [x] add prmotional price
