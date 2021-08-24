@@ -91,17 +91,25 @@ def aliexpress_download():
        return 'Insira um link válido!'
 
     print('A iniciar processo...')
-    executor.submit(crawl_aliexpress, url=link, root_path=ROOT_DIR, nameOfFile=name_file)
+    executor.submit_stored('aliexpress', crawl_aliexpress, url=link, root_path=ROOT_DIR, nameOfFile=name_file)
     return redirect(url_for('aliexpress_get'))
 
 
 @app.get('/aliexpressget')
 def aliexpress_get():
     filename = 'aliexpress.csv'
-    if os.path.exists(filename):
-        return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
 
-    if len(redirect_limit) >= 15:
+    if not executor.futures.done('calc_power'):
+        return jsonify({'status': executor.futures._state('calc_power')})
+
+    future = executor.futures.pop('calc_power')
+    if not future.result():
+        if os.path.exists(filename):
+            return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
+    else:
+        return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!"
+
+    if len(redirect_limit) >= 10:
         return "Arquivo não achado ou algum erro aconteceu...."
 
     sleep(10)
