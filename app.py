@@ -22,9 +22,10 @@ app = init_app()
 CORS(app, expose_headers=["Content-Disposition"])
 executor = Executor(app)
 
-app.config['EXECUTOR_MAX_WORKERS'] = 1
+app.config['EXECUTOR_MAX_WORKERS'] = 2
 app.config['EXECUTOR_TYPE'] = 'thread'
 app.config['EXECUTOR_PROPAGATE_EXCEPTIONS'] = True
+redirect_limit = []
 
 
 @app.route('/')
@@ -101,7 +102,12 @@ def aliexpress_get():
     if os.path.exists(filename):
         return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
 
+    if len(redirect_limit) >= 15:
+        return "Arquivo nõ achado ou algum erro aconteceu...."
+
     sleep(10)
+    redirect_limit.append(0)
+    print(len(redirect_limit))
     return redirect(url_for('aliexpress_get'))
 
 

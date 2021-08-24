@@ -1,6 +1,7 @@
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+# from fake_useragent import UserAgent
 from utils.build import resource_path
 from utils.proxy import init_proxy
 from dotenv import load_dotenv
@@ -9,6 +10,8 @@ from dotenv import load_dotenv
 def setSelenium(root_path, console=True, proxy=False):
     # configuração do selenium
     chrome_options = Options()
+    # ua = UserAgent()
+    # userAgent = ua.random
     load_dotenv(os.path.join(root_path, '.env'), verbose=True)
 
     if not console:
@@ -24,7 +27,7 @@ def setSelenium(root_path, console=True, proxy=False):
     })
 
     # adicionar idioma
-    chrome_options.AddArguments("--lang=pt-br")
+    chrome_options.add_argument("--lang=pt-br")
     chrome_options.add_experimental_option('prefs', {'intl.accept_languages': 'pt-br, pt_BR'})
 
     # evitar detecção anti-bot
