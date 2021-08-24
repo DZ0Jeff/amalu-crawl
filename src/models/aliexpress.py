@@ -27,16 +27,17 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             # print(navlist[location].get_attribute('outerHTML'))    
             driver.execute_script("arguments[0].click();", WebDriverWait(navlist[location], 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))))
 
+    
+    print('> iniciando...')
+    driver = setSelenium(root_path, False)
+    driver.get(url)
+
+    driver.execute_script("window.scrollTo(0, 1200);") 
+    # smooth_scroll(driver)   
+    print('> selecionando ficha tecníca...')
+    sleep(3)
+
     try:
-        print('> iniciando...')
-        driver = setSelenium(root_path, False)
-        driver.get(url)
-
-        driver.execute_script("window.scrollTo(0, 1200);") 
-        # smooth_scroll(driver)   
-        print('> selecionando ficha tecníca...')
-        sleep(3)
-
         # select details
         navbar = driver.find_elements_by_css_selector('.detail-tab-bar')[-1]
         navlist = navbar.find_elements_by_tag_name('li')

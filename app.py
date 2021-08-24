@@ -107,6 +107,7 @@ def aliexpress_get():
 
     sleep(10)
     redirect_limit.append(0)
+    print('Limit: ', len(redirect_limit))
     return redirect(url_for('aliexpress_get'))
 
 
