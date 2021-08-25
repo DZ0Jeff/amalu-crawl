@@ -36,7 +36,9 @@ def crawl_aliexpress(url, root_path, nameOfFile):
                 print('Achando seletor de país')
                 driver.save_screenshot('error.png')
                 sleep(3)
-                driver.find_element_by_xpath('//*[@id="nav-global"]/div[4]/div/div/div/div[1]/div/a[1]').click()
+                coutry_container = driver.find_element_by_css_selector('.country-selector.switcher-shipto-c.address-selector')
+                sleep(3)
+                coutry_container.find_element_by_tag_name('a').click()
 
             except Exception as error:
                 print("[ERRO]", error)
