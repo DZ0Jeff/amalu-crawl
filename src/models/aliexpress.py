@@ -17,7 +17,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     def select_region(driver):
         # driver.implicitly_wait(220)
         try:
-            print('Tentando clikcar no modal')
+            print('Tentando clicar no modal')
             country_modal = driver.find_element_by_id('switcher-info')
             sleep(3)
             country_modal.click()
@@ -35,7 +35,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
                 country_modal.click()
                 print('Achando seletor de país')
                 driver.save_screenshot('error.png')
-                driver.find_element_by_css_selector('.address-select-trigger').click()
+                driver.find_element_by_xpath('//*[@id="nav-global"]/div[4]/div/div/div/div[1]/div/a[1]').click()
 
             except Exception as error:
                 print("[ERRO]", error)
