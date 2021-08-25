@@ -34,6 +34,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
                 print('clickando no modal')
                 country_modal.click()
                 print('Achando seletor de país')
+                driver.save_screenshot('error.png')
                 driver.find_element_by_css_selector('.address-select-trigger').click()
 
             except Exception as error:
