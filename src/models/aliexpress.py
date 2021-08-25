@@ -41,15 +41,11 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             driver.execute_script("arguments[0].click();", WebDriverWait(navlist[location], 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))))
 
     driver = setSelenium(root_path, False)
-    driver.execute_cdp_cmd("Page.setGeolocationOverride", params = {"latitude": -23.5660791, "longitude": -46.652984, "accuracy": 100 })
+    driver.execute_cdp_cmd("Page.setGeolocationOverride", {"latitude": -23.5660791, "longitude": -46.652984, "accuracy": 100 })
     driver.get(url)
     try:
         print('> iniciando...')
-        # select_region(driver)
-
-
         smooth_scroll(driver) 
-        # smooth_scroll(driver)   
         print('> selecionando ficha tecníca...')
         sleep(3)
 
