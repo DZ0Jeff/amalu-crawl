@@ -15,46 +15,17 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
     
     def select_region(driver):
-        # driver.implicitly_wait(220)
-        try:
-            print('Tentando clicar no modal')
-            country_modal = driver.find_element_by_id('switcher-info')
-            sleep(3)
-            country_modal.click()
-            print('Achando seletor de país')
-            driver.find_element_by_css_selector('.address-select-trigger').click()
+        driver.find_element_by_id('switcher-info')
+        sleep(5)
+        money_container = driver.find_element_by_css_selector('.switcher-currency-c')
+        print("Money container: ", money_container.text)
+        money_container.click()
+        sleep(10)
+        currentcy_input = driver.find_element_by_css_selector('.search-currency')
+        print('currentcy_input: ', currentcy_input)
+        currentcy_input.send_keys('real')
+        driver.save_screenshot('error.png')
 
-        except Exception:
-            try:
-                print('Falha ao achar o modal, esperando 10 segundos....')
-                sleep(10)
-                print('achando modal')
-                country_modal = driver.find_element_by_id('switcher-info')
-                sleep(3)
-                print('clickando no modal')
-                country_modal.click()
-                print('Achando seletor de país')
-                driver.save_screenshot('error.png')
-                sleep(3)
-                coutry_container = driver.find_element_by_css_selector('.country-selector.switcher-shipto-c.address-selector')
-                print('Modal: ', country_modal.text)
-                driver.implicitly_wait(10)
-                coutry_container.find_element_by_tag_name('a').click()
-
-            except Exception as error:
-                print("[ERRO]", error)
-                return
-        
-        # select inout and type country
-        sleep(3)
-        driver.find_element_by_css_selector('.filter-input').send_keys('brazil')
-
-        # select country selected
-        sleep(3)
-        driver.find_element_by_css_selector('.address-select-item.address-select-selected').click()
-
-        # confirm
-        driver.find_element_by_css_selector('.ui-button.ui-button-primary.go-contiune-btn').click()
 
     def click_on_list(navlist, location, driver):
         try:
