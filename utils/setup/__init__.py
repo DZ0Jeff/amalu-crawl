@@ -10,14 +10,13 @@ from dotenv import load_dotenv
 def setSelenium(root_path, console=True, proxy=False):
     # configuração do selenium
     chrome_options = Options()
-    # ua = UserAgent()
-    # userAgent = ua.random
     load_dotenv(os.path.join(root_path, '.env'), verbose=True)
 
     if not console:
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
+    # chrome_options.add_argument("--start-maximized")
 
     # Desabilitar notificações
     chrome_options.add_argument("--disable-infobars")
@@ -31,19 +30,20 @@ def setSelenium(root_path, console=True, proxy=False):
     chrome_options.add_experimental_option('prefs', {'intl.accept_languages': 'pt-br, pt_BR'})
 
     # evitar detecção anti-bot
-    # chrome_options.add_argument(f'user-agent={userAgent}')
-
-    # chrome_options.add_argument("user-data-dir=Pessoa_1") 
     chrome_options.add_argument(f'user-agent=Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36')
     chrome_options.add_argument("--disable-blink-features")
     chrome_options.add_argument('--disable-blink-features=AutomationControlled')
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option('useAutomationExtension', False)
     chrome_options.add_experimental_option("detach", True)
+    
     # desabilitar o log do chrome
     chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
     prefs = {"profile.default_content_setting_values.notifications": 2}
     chrome_options.add_experimental_option("prefs", prefs)
+
+    # maximizar janela
+    
 
     # driver paths
     # path = os.path.join(root_path, os.getenv('CHROMEDRIVER_PATH'))

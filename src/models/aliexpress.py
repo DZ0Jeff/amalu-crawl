@@ -2,7 +2,6 @@ from utils.parser_handler import init_parser
 from utils.file_handler import dataToExcel
 from utils.setup import setSelenium
 from utils.webdriver_handler import dynamic_page, smooth_scroll
-from utils.telegram import TelegramBot
 from time import sleep
 
 
@@ -14,6 +13,39 @@ from selenium.webdriver.support import expected_conditions as EC
 
 def crawl_aliexpress(url, root_path, nameOfFile):
 
+    
+    def select_region(driver):
+        # driver.implicitly_wait(220)
+        try:
+            print('Tentando clikcar no modal')
+            country_modal = driver.find_element_by_id('switcher-info')
+            sleep(3)
+            country_modal.click()
+            print('Achando seletor de país')
+            driver.find_element_by_css_selector('.address-select-trigger').click()
+
+        except Exception:
+            print('Falha ao achar o modal, esperando 10 segundos....')
+            sleep(10)
+            print('achando modal')
+            country_modal = driver.find_element_by_id('switcher-info')
+            sleep(3)
+            print('clickando no modal')
+            country_modal.click()
+            print('Achando seletor de país')
+            driver.find_element_by_css_selector('.address-select-trigger').click()
+
+        
+        # select inout and type country
+        sleep(3)
+        driver.find_element_by_css_selector('.filter-input').send_keys('brazil')
+
+        # select country selected
+        sleep(3)
+        driver.find_element_by_css_selector('.address-select-item.address-select-selected').click()
+
+        # confirm
+        driver.find_element_by_css_selector('.ui-button.ui-button-primary.go-contiune-btn').click()
 
     def click_on_list(navlist, location, driver):
         try:
@@ -30,10 +62,9 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
     driver = setSelenium(root_path, False)
     driver.get(url)
-    print('> iniciando...')
-
     try:
-        driver.save_screenshot('error.png')
+        print('> iniciando...')
+        select_region(driver)
         smooth_scroll(driver) 
         # smooth_scroll(driver)   
         print('> selecionando ficha tecníca...')
@@ -58,7 +89,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     except Exception as error:
         driver.quit()
         print(f'Elemento não achado {error}')
-        return
+        raise
 
 
     print('> Extraíndo resultados...')

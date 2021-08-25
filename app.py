@@ -91,6 +91,8 @@ def aliexpress_download():
        return 'Insira um link válido!'
 
     print('A iniciar processo...')
+    # crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile=name_file)
+    # return "working..."
     executor.submit_stored('aliexpress_crawl', crawl_aliexpress, url=link, root_path=ROOT_DIR, nameOfFile=name_file)
     return redirect(url_for('aliexpress_get'))
 
