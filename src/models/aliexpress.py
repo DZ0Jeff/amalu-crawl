@@ -25,16 +25,20 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             driver.find_element_by_css_selector('.address-select-trigger').click()
 
         except Exception:
-            print('Falha ao achar o modal, esperando 10 segundos....')
-            sleep(10)
-            print('achando modal')
-            country_modal = driver.find_element_by_id('switcher-info')
-            sleep(3)
-            print('clickando no modal')
-            country_modal.click()
-            print('Achando seletor de país')
-            driver.find_element_by_css_selector('.address-select-trigger').click()
+            try:
+                print('Falha ao achar o modal, esperando 10 segundos....')
+                sleep(10)
+                print('achando modal')
+                country_modal = driver.find_element_by_id('switcher-info')
+                sleep(3)
+                print('clickando no modal')
+                country_modal.click()
+                print('Achando seletor de país')
+                driver.find_element_by_css_selector('.address-select-trigger').click()
 
+            except Exception as error:
+                print("[ERRO]", error)
+                return
         
         # select inout and type country
         sleep(3)
