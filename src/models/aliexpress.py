@@ -37,7 +37,8 @@ def crawl_aliexpress(url, root_path, nameOfFile):
                 driver.save_screenshot('error.png')
                 sleep(3)
                 coutry_container = driver.find_element_by_css_selector('.country-selector.switcher-shipto-c.address-selector')
-                sleep(3)
+                print('Modal: ', country_modal.text)
+                driver.implicitly_wait(10)
                 coutry_container.find_element_by_tag_name('a').click()
 
             except Exception as error:
