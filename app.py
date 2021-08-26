@@ -48,7 +48,7 @@ def amazon_download():
     if link == '':
         return 'Insira um link'
 
-    if not link.split('/')[2] == "www.amazon.com.br":
+    if not link.split('/')[2] == "www.amazon.com.br" or not link.split('/')[2] == "www.amazon.com":
         return "Insira o um link válido!"
 
     executor.submit(crawl_amazon, link, ROOT_DIR, "Amazon")

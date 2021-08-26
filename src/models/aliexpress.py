@@ -13,7 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 def crawl_aliexpress(url, root_path, nameOfFile):
 
-    
+
     def select_region(driver):
         driver.find_element_by_id('switcher-info')
         sleep(5)
@@ -110,8 +110,8 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         except Exception:
             # Banner
             try:
-                price = soap.find('span', class_='uniform-banner-box-price').get_text()
-                promotiona_price = soap.find('span', class_="uniform-banner-box-discounts").get_text()
+                price = str(soap.find('span', class_='uniform-banner-box-price').get_text()).split('-')[0]
+                promotiona_price = str(soap.find('span', class_="uniform-banner-box-discounts").get_text()).split('-')[0]
 
             except AttributeError:
                 price = ""
