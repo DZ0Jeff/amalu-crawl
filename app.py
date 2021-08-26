@@ -6,6 +6,7 @@ from flask.helpers import send_file, url_for
 from flask_executor import Executor
 from werkzeug.utils import redirect
 from flask_cors import CORS
+from src.models.Shopee import crawl_shopee
 from src.models.aliexpress import crawl_aliexpress
 
 from src.models.Amazon import crawl_amazon
@@ -129,5 +130,6 @@ def error_image():
 
 
 if __name__ == "__main__":
-    app.debug = True
-    app.run()    
+    # app.debug = True
+    # app.run()
+    crawl_shopee('https://shopee.com.br/Teclado-Gamer-Pro-Blackfire-Semi-Mec%C3%A2nico-Iluminado-Fortrek-i.338036715.5162992400?ads_keyword=pc%20gamer&adsid=3906860&campaignid=2503549&position=1', ROOT_DIR)    

@@ -12,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 def crawl_aliexpress(url, root_path, nameOfFile):
-    
+
 
     def click_on_list(navlist, location, driver):
         try:
@@ -26,6 +26,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             print('clicando 2 vez...')
             # print(navlist[location].get_attribute('outerHTML'))    
             driver.execute_script("arguments[0].click();", WebDriverWait(navlist[location], 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))))
+
 
     driver = setSelenium(root_path, False)
     driver.execute_cdp_cmd("Page.setGeolocationOverride", {"latitude": -23.5660791, "longitude": -46.652984, "accuracy": 100 })
