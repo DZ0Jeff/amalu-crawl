@@ -26,8 +26,8 @@ def setSelenium(root_path, console=True, proxy=False):
     })
     
     # adicionar idioma
-    chrome_options.add_argument("--lang=pt-br")
-    chrome_options.add_experimental_option('prefs', {'intl.accept_languages': 'pt-br, pt_BR'})
+    chrome_options.add_argument("--lang=pt-BR")
+    chrome_options.add_experimental_option('prefs', {'intl.accept_languages': 'pt, pt-BR'})
 
     # evitar detecção anti-bot
     chrome_options.add_argument(f'user-agent=Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36')

@@ -12,20 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 def crawl_aliexpress(url, root_path, nameOfFile):
-
-
-    def select_region(driver):
-        driver.find_element_by_id('switcher-info')
-        sleep(5)
-        money_container = driver.find_element_by_css_selector('.switcher-currency-c')
-        print("Money container: ", money_container.text)
-        money_container.click()
-        sleep(10)
-        currentcy_input = driver.find_element_by_css_selector('.search-currency')
-        print('currentcy_input: ', currentcy_input)
-        currentcy_input.send_keys('real')
-        driver.save_screenshot('error.png')
-
+    
 
     def click_on_list(navlist, location, driver):
         try:
