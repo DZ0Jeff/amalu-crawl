@@ -125,8 +125,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         img_src = []
 
 
-    print('Price: ', price)
-    print('Promotional price: ', promotiona_price)
+    
 
     product['Tipo'] = ["external"]
     product["Categorias"] = [category]
@@ -147,6 +146,9 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     product["Descrição"] = [descryption]
     product["Images"] = [", ".join(img_src)]
     
+    print('Price: ', product['Preço'])
+    print('Promotional price: ', product['Preço promocional'])
+
     print('> Salvando em arquivo...')
     # print(price)
     # print(promotiona_price)
