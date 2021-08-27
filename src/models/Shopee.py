@@ -67,7 +67,7 @@ def crawl_shopee(url, root_path, nameOfFile):
         data['Type'] = ["external"]
         data['SKU'] = [sku]
         data['Nome'] = [title]
-        if price == '':
+        if price == '' and promotional_price > price:
             data['Preço'] = [promotional_price]
             data['Preço Promocional'] = ['']
         else:
