@@ -123,8 +123,6 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
     except Exception:
         img_src = []
-
-
     
 
     product['Tipo'] = ["external"]
