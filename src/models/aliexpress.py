@@ -125,17 +125,20 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         img_src = []
 
 
+
+    print('Price: ', price)
+    print('Promotional price: ', promotiona_price)
+
     product['Tipo'] = ["external"]
     product["Categorias"] = [category]
     product["Sku"] = [sku]
     product["Nome"] = [title]
-    if promotiona_price == '' or promotiona_price > price:
-        product["Preço promocional"] = [promotiona_price] 
-        product["Preço"] = [price]
+    if price == '':
+        product["Preço promocional"] = [price] 
+        product["Preço"] = [promotiona_price]
     else:
         product["Preço promocional"] = [promotiona_price]
         product["Preço"] = [price]
-
     product['Texto do botão'] = ["Ver produto"]
     product["Url externa"] = [url]
     product["Descrição curta"] = [tecnical_content]
