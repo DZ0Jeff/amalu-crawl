@@ -125,7 +125,6 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         img_src = []
 
 
-
     print('Price: ', price)
     print('Promotional price: ', promotiona_price)
 
@@ -134,6 +133,9 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     product["Sku"] = [sku]
     product["Nome"] = [title]
     if price == '':
+        product["Preço promocional"] = [price] 
+        product["Preço"] = [promotiona_price]
+    elif int(promotiona_price) > int(price):
         product["Preço promocional"] = [price] 
         product["Preço"] = [promotiona_price]
     else:
