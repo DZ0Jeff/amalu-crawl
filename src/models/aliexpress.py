@@ -85,17 +85,17 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     try:
         price = str(soap.find('div', class_="product-price-original").get_text())
         if price.find('-') != -1:
-            price.split('-')[0]
+            price = price.split('-')[0]
 
         promotiona_price = str(soap.find('div', class_="product-price-current").get_text())
         if promotiona_price.find('-') != -1:
-            price.split('-')[0]
+            promotiona_price = promotiona_price.split('-')[0]
     
     except AttributeError:
         try:
             price = str(soap.find('span', class_="product-price-value").get_text())
             if price.find('-') != -1:
-                price.split('-')[0]
+                price = price.split('-')[0]
             
             promotiona_price = ""
 
@@ -104,11 +104,11 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             try:
                 price = str(soap.find('span', class_='uniform-banner-box-price').get_text())
                 if price.find('-') != -1:
-                    price.split('-')[0]
+                    price = price.split('-')[0]
                 
                 promotiona_price = str(soap.find('span', class_="uniform-banner-box-discounts").get_text())
                 if promotiona_price.find('-') != -1:
-                    price.split('-')[0]
+                    promotiona_price = promotiona_price.split('-')[0]
 
             except AttributeError:
                 price = ""
