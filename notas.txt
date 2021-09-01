@@ -7,4 +7,11 @@ sobre o aliexpress:
     - ficha tenica da aliexpress, ela se localiza no campo descrição curta
     - quando possível, ele extraí o preço promocional e o preço final, se existir o preço promocional ele será o destaque, com preço final acima
 
-sobre a amazon e magazine, a desçrição tecnica se encontra na descrição no final, coomo no template não existe coluna para descrição tecnica
+sobre a amazon e magazine: 
+    - A desçrição tecnica se encontra na descrição no final, como o template do wordpress não suporta esta coluna adiciona
+
+Vou te reenviar os arquivos para conferir
+
+Dúvidas à disposição
+
+Att.
