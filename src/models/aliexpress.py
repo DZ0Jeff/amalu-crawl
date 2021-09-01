@@ -33,13 +33,10 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     driver.get(url)
     try:
         print('> iniciando...')
-<<<<<<< HEAD
-=======
         # select_region(driver)
         lang = driver.execute_script("return window.navigator.userlanguage || window.navigator.language")
         print('Lingua: ',lang)
         
->>>>>>> 65ba4e21a4b990d7260112472d6ef2e57f8183b4
         smooth_scroll(driver) 
         print('> selecionando ficha tecníca...')
         sleep(3)
@@ -95,7 +92,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     
     except AttributeError:
         try:
-            price = str(soap.find('span', class_="product-price-value").get_text()).strip('-')[0]
+            price = str(soap.find('span', class_="product-price-value").get_text())
             promotiona_price = ""
 
         except Exception:
