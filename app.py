@@ -35,7 +35,8 @@ def index():
             'Routes': { 
                 '/amazon': 'Crawl amazon products, args: link of product', 
                 '/magazinevoce': 'Crawl magazinei9bux product details, args: link of product',
-                '/aliexpress': 'Crawl aliexpress product details, args: link of product'
+                '/aliexpress': 'Crawl aliexpress product details, args: link of product',
+                # '/shopee': 'Crawl shopee product details, args: link of product'
             } 
         }
     )
