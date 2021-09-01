@@ -34,8 +34,6 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     try:
         print('> iniciando...')
         # select_region(driver)
-        lang = driver.execute_script("return window.navigator.userlanguage || window.navigator.language")
-        print('Lingua: ',lang)
         
         smooth_scroll(driver) 
         print('> selecionando ficha tecníca...')
