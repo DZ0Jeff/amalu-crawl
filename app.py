@@ -6,6 +6,7 @@ from flask.helpers import send_file, url_for
 from flask_executor import Executor
 from werkzeug.utils import redirect
 from flask_cors import CORS
+from src.models.Shopee import crawl_shopee
 from src.models.aliexpress import crawl_aliexpress
 
 from src.models.Amazon import crawl_amazon
@@ -48,7 +49,7 @@ def amazon_download():
     if link == '':
         return 'Insira um link'
 
-    if not link.split('/')[2] == "www.amazon.com.br":
+    if not link.split('/')[2] == "www.amazon.com.br" or not link.split('/')[2] == "www.amazon.com":
         return "Insira o um link válido!"
 
     executor.submit(crawl_amazon, link, ROOT_DIR, "Amazon")
@@ -119,6 +120,42 @@ def aliexpress_get():
         return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!"
 
 
+@app.get('/shopee')
+def shopee_download():
+    name_file = 'shopee.csv'
+    delete_product(name_file)
+    link = request.args.get('url')
+
+    if link == '' and link.split('/')[2] == "www.shopee.com.br":
+       return 'Insira um link válido!'
+
+    print('A iniciar processo...')
+    try:
+        executor.futures.pop('shopee_crawl')
+    except Exception:
+        pass
+    
+    executor.submit_stored('shopee_crawl', crawl_shopee, url=link, root_path=ROOT_DIR, nameOfFile=name_file)
+    return redirect(url_for('shopee_get'))
+
+
+@app.route('/shopeeget')
+def shopee_get():
+    filename = 'shopee.csv'
+
+    if not executor.futures.done('shopee_crawl'):
+        sleep(10)
+        return redirect(url_for('shopee_get')) 
+
+    future = executor.futures.pop('shopee_crawl')    
+    if os.path.exists(filename):
+        print(future.result())
+        return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
+    
+    else:
+        return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!"
+
+
 @app.route('/error')
 def error_image():
     filename = 'error.png'
@@ -130,4 +167,6 @@ def error_image():
 
 if __name__ == "__main__":
     app.debug = True
-    app.run()    
+    app.run()
+    # crawl_shopee('https://shopee.com.br/Teclado-Gamer-Pro-Blackfire-Semi-Mec%C3%A2nico-Iluminado-Fortrek-i.338036715.5162992400?ads_keyword=pc%20gamer&adsid=3906860&campaignid=2503549&position=1', ROOT_DIR, 'shopee.csv')    
+    # crawl_shopee('https://shopee.com.br/Pc-Gamer-Completo-Amd-A6-7480-8gb-Ssd-120gb-Gpu-Radeon-R5-i.383171174.8415105837?position=6', ROOT_DIR, 'shopee.csv')    

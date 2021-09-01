@@ -13,19 +13,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 def crawl_aliexpress(url, root_path, nameOfFile):
 
-    
-    def select_region(driver):
-        driver.find_element_by_id('switcher-info')
-        sleep(5)
-        money_container = driver.find_element_by_css_selector('.switcher-currency-c')
-        print("Money container: ", money_container.text)
-        money_container.click()
-        sleep(10)
-        currentcy_input = driver.find_element_by_css_selector('.search-currency')
-        print('currentcy_input: ', currentcy_input)
-        currentcy_input.send_keys('real')
-        driver.save_screenshot('error.png')
-
 
     def click_on_list(navlist, location, driver):
         try:
@@ -40,11 +27,19 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             # print(navlist[location].get_attribute('outerHTML'))    
             driver.execute_script("arguments[0].click();", WebDriverWait(navlist[location], 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))))
 
+
     driver = setSelenium(root_path, False)
     driver.execute_cdp_cmd("Page.setGeolocationOverride", {"latitude": -23.5660791, "longitude": -46.652984, "accuracy": 100 })
     driver.get(url)
     try:
         print('> iniciando...')
+<<<<<<< HEAD
+=======
+        # select_region(driver)
+        lang = driver.execute_script("return window.navigator.userlanguage || window.navigator.language")
+        print('Lingua: ',lang)
+        
+>>>>>>> 65ba4e21a4b990d7260112472d6ef2e57f8183b4
         smooth_scroll(driver) 
         print('> selecionando ficha tecníca...')
         sleep(3)
@@ -106,8 +101,8 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         except Exception:
             # Banner
             try:
-                price = soap.find('span', class_='uniform-banner-box-price').get_text()
-                promotiona_price = soap.find('span', class_="uniform-banner-box-discounts").get_text()
+                price = str(soap.find('span', class_='uniform-banner-box-price').get_text()).split('-')[0]
+                promotiona_price = str(soap.find('span', class_="uniform-banner-box-discounts").get_text()).split('-')[0]
 
             except AttributeError:
                 price = ""
