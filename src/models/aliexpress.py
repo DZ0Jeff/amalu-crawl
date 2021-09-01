@@ -17,14 +17,12 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     def click_on_list(navlist, location, driver):
         try:
             print('Clicando...')
-            # sleep(3)
             target = navlist[location]
             sleep(3)
             target.click()
 
         except ElementClickInterceptedException:
             print('clicando 2 vez...')
-            # print(navlist[location].get_attribute('outerHTML'))    
             driver.execute_script("arguments[0].click();", WebDriverWait(navlist[location], 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.tab-inner-text"))))
 
 
@@ -85,19 +83,32 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
     #  price
     try:
-        price = str(soap.find('div', class_="product-price-original").get_text()).split('-')[0]
-        promotiona_price = str(soap.find('div', class_="product-price-current").get_text()).split('-')[0]
+        price = str(soap.find('div', class_="product-price-original").get_text())
+        if price.find('-') != -1:
+            price.split('-')[0]
+
+        promotiona_price = str(soap.find('div', class_="product-price-current").get_text())
+        if promotiona_price.find('-') != -1:
+            price.split('-')[0]
     
     except AttributeError:
         try:
             price = str(soap.find('span', class_="product-price-value").get_text())
+            if price.find('-') != -1:
+                price.split('-')[0]
+            
             promotiona_price = ""
 
         except Exception:
             # Banner
             try:
-                price = str(soap.find('span', class_='uniform-banner-box-price').get_text()).split('-')[0]
-                promotiona_price = str(soap.find('span', class_="uniform-banner-box-discounts").get_text()).split('-')[0]
+                price = str(soap.find('span', class_='uniform-banner-box-price').get_text())
+                if price.find('-') != -1:
+                    price.split('-')[0]
+                
+                promotiona_price = str(soap.find('span', class_="uniform-banner-box-discounts").get_text())
+                if promotiona_price.find('-') != -1:
+                    price.split('-')[0]
 
             except AttributeError:
                 price = ""
