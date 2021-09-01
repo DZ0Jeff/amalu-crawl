@@ -14,3 +14,4 @@ chromedriver.exe
 *.wmv
 driver/
 *.lnk
+*.txt
