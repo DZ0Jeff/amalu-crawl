@@ -1,0 +1,10 @@
+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
+
+
+Bom dia marcos, tudo bem?
+
+sobre o aliexpress:
+    - ficha tenica da aliexpress, ela se localiza no campo descrição curta
+    - quando possível, ele extraí o preço promocional e o preço final, se existir o preço promocional ele será o destaque, com preço final acima
+
+sobre a amazon e magazine, a desçrição tecnica se encontra na descrição no final, coomo no template não existe coluna para descrição tecnica

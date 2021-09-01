@@ -73,7 +73,7 @@ def magazinei9bux_get():
     delete_product('Magalu.csv')
     link = request.args.get('url')
 
-    if link == '' and not link.split('/')[2] == "www.magazinevoce.com.br":
+    if link == '' and link.split('/')[2] == "www.magazinevoce.com.br":
        return 'Insira um link válido!'
 
     filename = crawl_magazinevoce(link,'Magalu')
