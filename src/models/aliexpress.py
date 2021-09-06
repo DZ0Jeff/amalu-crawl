@@ -117,7 +117,13 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     # descryption
     descryption = ""
     try:
-        descryption = soap.select_one('div#product-description').get_text() 
+        try:
+            soap.find('div', class_='detailmodule_dynamic').decompose()
+        except Exception:
+            print('Falha ao deletar elemento....')
+            pass
+
+        descryption = soap.select_one('div#product-description').get_text(separator="\n")
     
     except Exception:
         descryption = ""
