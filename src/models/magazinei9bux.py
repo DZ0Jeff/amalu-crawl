@@ -1,4 +1,4 @@
-from src.utils import find_magalu_images, get_magazine_specs, get_specs
+from src.utils import convert_price, find_magalu_images, get_magazine_specs, get_specs
 from utils.parser_handler import init_crawler, remove_whitespaces
 from utils.file_handler import dataToExcel
 from bs4 import NavigableString
@@ -43,7 +43,11 @@ def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
     details['Type'] = ["external"]
     details['Nome'] = [title]
     details['Categorias'] = [f"{store} > {category}"]
-    if promotional_price == '':
+
+    decimal_promotional_price = convert_price(remove_whitespaces(promotional_price))
+    decimal_price = convert_price(remove_whitespaces(price))
+
+    if promotional_price == '' or decimal_promotional_price > decimal_price:
         details['Preço promocional'] = [remove_whitespaces(promotional_price)]
         details['Preço'] = [remove_whitespaces(price)]
     else:

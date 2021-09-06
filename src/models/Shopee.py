@@ -1,3 +1,4 @@
+from src.utils import convert_price
 from utils.setup import setSelenium
 from utils.webdriver_handler import smooth_scroll
 from selenium.common.exceptions import NoSuchElementException
@@ -67,9 +68,12 @@ def crawl_shopee(url, root_path, nameOfFile):
         data['Type'] = ["external"]
         data['SKU'] = [sku]
         data['Nome'] = [title]
-        if price == '' and promotional_price > price:
+
+        decimal_promotional_price = convert_price(promotional_price)
+        decimal_price = convert_price(price)
+        if price == '' or decimal_promotional_price > decimal_price:
             data['Preço'] = [promotional_price]
-            data['Preço Promocional'] = ['']
+            data['Preço Promocional'] = [price]
         else:
             data['Preço Promocional'] = [promotional_price]
             data['Preço'] = [price]

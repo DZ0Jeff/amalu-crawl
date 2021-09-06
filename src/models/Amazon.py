@@ -1,7 +1,7 @@
 import re
 from utils.parser_handler import init_crawler, init_parser, remove_whitespaces
 from utils.file_handler import dataToExcel
-from src.utils import format_table, getAmazonImageGalery, get_specs
+from src.utils import convert_price, format_table, getAmazonImageGalery, get_specs
 from utils.setup import setSelenium
 from utils.webdriver_handler import dynamic_page
 
@@ -115,7 +115,11 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile="Amazon"):
         details['Type'] = ["external"]
         details['SKU'] = [remove_whitespaces(ean)]
         details['Nome'] = [remove_whitespaces(title)]
-        if price == '' and promotional_price > price:
+
+        decimal_promotional_price = convert_price(remove_whitespaces(promotional_price))
+        decimal_price = convert_price(remove_whitespaces(price))
+
+        if price == '' and decimal_promotional_price > decimal_price:
             details['Preço Promocional'] = [remove_whitespaces(price)]
             details['Preço'] = [remove_whitespaces(promotional_price)]
         else:

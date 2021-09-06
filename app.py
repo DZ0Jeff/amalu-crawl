@@ -62,7 +62,7 @@ def amazon_download():
 def amazon_get():
     filename = 'Amazon.csv'
     if os.path.exists(filename):
-        return send_file(os.path.join(ROOT_DIR, filename), as_attachment=True, cache_timeout=-1)
+        return send_file(os.path.join(ROOT_DIR, filename), as_attachment=True, max_age=-1)
 
     sleep(5)
     return redirect(url_for('amazon_get'))
@@ -81,7 +81,7 @@ def magazinei9bux_get():
     if not isinstance(filename, str):
         return f"Um erro aconteceu: {filename}"
 
-    return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
+    return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', download_name=filename ,as_attachment=True, max_age=-1)
 
 
 @app.route('/aliexpress')
@@ -94,8 +94,6 @@ def aliexpress_download():
        return 'Insira um link válido!'
 
     print('A iniciar processo...')
-    # crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile=name_file)
-    # return "working..."
     try:
         executor.futures.pop('aliexpress_crawl')
     except Exception:
@@ -116,7 +114,7 @@ def aliexpress_get():
     future = executor.futures.pop('aliexpress_crawl')    
     if os.path.exists(filename):
         print(future.result())
-        return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
+        return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', download_name=filename ,as_attachment=True, max_age=-1)
     
     else:
         return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!"
@@ -152,7 +150,7 @@ def shopee_get():
     future = executor.futures.pop('shopee_crawl')    
     if os.path.exists(filename):
         print(future.result())
-        return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', attachment_filename=filename ,as_attachment=True, cache_timeout=-1)
+        return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', download_name=filename ,as_attachment=True, max_age=-1)
     
     else:
         return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!"
@@ -162,13 +160,11 @@ def shopee_get():
 def error_image():
     filename = 'error.png'
     if os.path.exists(filename):
-        return send_file(os.path.join(ROOT_DIR, filename), mimetype='image/png', attachment_filename=filename, as_attachment=True, cache_timeout=-1)
+        return send_file(os.path.join(ROOT_DIR, filename), mimetype='image/png', download_name=filename, as_attachment=True, max_age=-1)
     
     return "Screenshot nao disponível!"
 
 
 if __name__ == "__main__":
-    app.debug = True
+    # app.debug = True
     app.run()
-    # crawl_shopee('https://shopee.com.br/Teclado-Gamer-Pro-Blackfire-Semi-Mec%C3%A2nico-Iluminado-Fortrek-i.338036715.5162992400?ads_keyword=pc%20gamer&adsid=3906860&campaignid=2503549&position=1', ROOT_DIR, 'shopee.csv')    
-    # crawl_shopee('https://shopee.com.br/Pc-Gamer-Completo-Amd-A6-7480-8gb-Ssd-120gb-Gpu-Radeon-R5-i.383171174.8415105837?position=6', ROOT_DIR, 'shopee.csv')    

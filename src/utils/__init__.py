@@ -8,6 +8,8 @@ import os
 import requests
 import shutil
 import sys
+from re import sub
+from decimal import Decimal
 
 
 def getAmazonImageGalery(driver):
@@ -182,3 +184,9 @@ def delete_product(product):
             os.remove(product)
         except FileExistsError:
             pass
+
+
+def convert_price(price):
+    price = price.replace("R$",'').replace("U$", '').replace('.', '').strip()
+    price = Decimal(sub(r'[^\d.]', '', price))
+    return int(price)

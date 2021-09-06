@@ -2,8 +2,9 @@ from utils.parser_handler import init_parser
 from utils.file_handler import dataToExcel
 from utils.setup import setSelenium
 from utils.webdriver_handler import dynamic_page, smooth_scroll
-from time import sleep
+from src.utils import convert_price
 
+from time import sleep
 
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -85,17 +86,17 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     try:
         price = str(soap.find('div', class_="product-price-original").get_text())
         if price.find('-') != -1:
-            price = price.split('-')[0]
+            price = price.split('-')[0].strip()
 
         promotiona_price = str(soap.find('div', class_="product-price-current").get_text())
         if promotiona_price.find('-') != -1:
-            promotiona_price = promotiona_price.split('-')[0]
+            promotiona_price = promotiona_price.split('-')[0].strip()
     
     except AttributeError:
         try:
             price = str(soap.find('span', class_="product-price-value").get_text())
             if price.find('-') != -1:
-                price = price.split('-')[0]
+                price = price.split('-')[0].strip()
             
             promotiona_price = ""
 
@@ -104,11 +105,11 @@ def crawl_aliexpress(url, root_path, nameOfFile):
             try:
                 price = str(soap.find('span', class_='uniform-banner-box-price').get_text())
                 if price.find('-') != -1:
-                    price = price.split('-')[0]
+                    price = price.split('-')[0].strip()
                 
                 promotiona_price = str(soap.find('span', class_="uniform-banner-box-discounts").get_text())
                 if promotiona_price.find('-') != -1:
-                    promotiona_price = promotiona_price.split('-')[0]
+                    promotiona_price = promotiona_price.split('-')[0].strip()
 
             except AttributeError:
                 price = ""
@@ -143,10 +144,19 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     product["Categorias"] = [category]
     product["Sku"] = [sku]
     product["Nome"] = [title]
-    if price == '' and promotiona_price > price:
+
+    decimal_price = convert_price(price)
+    decimal_promotional_price = convert_price(promotiona_price)
+
+    print('Preço: ', decimal_price)
+    print('Preço promocional: ', decimal_promotional_price)
+
+    if price == '' or decimal_promotional_price > decimal_price:
+        print('> invertendo os preços')
         product["Preço promocional"] = [price] 
         product["Preço"] = [promotiona_price]
     else:
+        print('> Preços originais')
         product["Preço promocional"] = [promotiona_price]
         product["Preço"] = [price]
     product['Texto do botão'] = ["Ver produto"]
@@ -155,8 +165,8 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     product["Descrição"] = [descryption]
     product["Images"] = [", ".join(img_src)]
     
-    print('Price: ', product['Preço'])
-    print('Promotional price: ', product['Preço promocional'])
+    # print('Price: ', product['Preço'])
+    # print('Promotional price: ', product['Preço promocional'])
 
     print('> Salvando em arquivo...')
     # print(price)
