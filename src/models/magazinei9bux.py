@@ -36,15 +36,13 @@ def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
 
     except Exception: 
         print('> Falha ao extrair dados! contate do administrador do sistema...')
-        # return
+        return
 
     details = dict()
     details['Sku'] = [remove_whitespaces(sku)]
     details['Type'] = ["external"]
     details['Nome'] = [title]
     details['Categorias'] = [f"{store} > {category}"]
-    # decimal_promotional_price = convert_price(remove_whitespaces(promotional_price))
-    # decimal_price = convert_price(remove_whitespaces(price))
     details['Preço promocional'] = [remove_whitespaces(promotional_price)]
     details['Preço'] = [remove_whitespaces(price)]
     details['Url Externa'] = [url]
