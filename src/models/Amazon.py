@@ -115,15 +115,15 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile="Amazon"):
         details['SKU'] = [remove_whitespaces(ean)]
         details['Nome'] = [remove_whitespaces(title)]
 
-        # decimal_promotional_price = convert_price(remove_whitespaces(promotional_price))
-        # decimal_price = convert_price(remove_whitespaces(price))
+        decimal_promotional_price = convert_price(remove_whitespaces(promotional_price))
+        decimal_price = convert_price(remove_whitespaces(price))
 
-        # if price == '' and decimal_promotional_price > decimal_price:
-        #     details['Preço Promocional'] = [remove_whitespaces(price)]
-        #     details['Preço'] = [remove_whitespaces(promotional_price)]
-        # else:
-        details['Preço Promocional'] = [remove_whitespaces(promotional_price)]
-        details['Preço'] = [remove_whitespaces(price)]
+        if decimal_promotional_price > decimal_price:
+            details['Preço Promocional'] = [remove_whitespaces(price)]
+            details['Preço'] = [remove_whitespaces(promotional_price)]
+        else:
+            details['Preço Promocional'] = [remove_whitespaces(price)]
+            details['Preço'] = [remove_whitespaces(promotional_price)] 
         details['Categorias'] = [f"{store} > {remove_whitespaces(category)}"]
         details['Url externa'] = [url]
         details['Texto do botão'] = ["Ver produto"]
