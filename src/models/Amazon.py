@@ -85,31 +85,30 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile="Amazon"):
                 except Exception:
                     galery = ""
 
-        # price of product
+        # price of product    
         try:
-            urlPrice = f"https://ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=BR&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=vantajao0e-20&language=pt_BR&marketplace=amazon&region=BR&placement=B088HJ3FCX&asins={ean}&linkId=2113f78bf439002e072fcf867b4c8889&show_border=true&link_opens_in_new_window=true"
-            adPrice = init_crawler(urlPrice)
-            price = adPrice.find('span', class_="price").text
-            
+            # raw_price = soap.find('tr', id="conditionalPrice").text
+            raw_price = soap.find('span', id="price").text
+            price = remove_whitespaces(raw_price)
+
         except Exception:
             try:
-                # raw_price = soap.find('tr', id="conditionalPrice").text
-                raw_price = soap.find('span', id="price").text
-                price = remove_whitespaces(raw_price)
+                price = soap.find('span', id="price_inside_buybox").get_text()
 
             except Exception:
-                try:
-                    price = soap.find('span', id="price_inside_buybox").get_text()
-
-                except Exception:
-                    price = ""
+                price = ""
 
         # promotional price
         try:
-            promotional_price = soap.find('td', class_="a-span12 a-color-secondary a-size-base").text
+            promotional_price = soap.find('span', class_="priceBlockStrikePriceString a-text-strike").text
+            
 
         except AttributeError:
-            promotional_price = ""
+            try:
+                promotional_price = soap.find('td', class_="a-span12 a-color-secondary a-size-base").text    
+
+            except Exception:
+                promotional_price = ""
 
         details = dict()
         details['Type'] = ["external"]
