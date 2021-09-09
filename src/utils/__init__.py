@@ -187,6 +187,8 @@ def delete_product(product):
 
 
 def convert_price(price):
+    if price == "" or price == None: return ""
+
     print("Before: ", price)
     price = price.replace("R$",'').replace("U$", '').replace('.', '').strip()
     print('After: ', price)
