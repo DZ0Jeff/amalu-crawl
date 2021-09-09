@@ -188,13 +188,9 @@ def delete_product(product):
 
 def convert_price(price):
     if price == "" or price == None: return ""
-
-    print("Before: ", price)
+    # print("Before: ", price)
     price = price.replace("R$",'').replace("U$", '').replace('.', '').strip()
-    print('After: ', price)
-    try:
-        price = Decimal(sub(r'[^\d.]', '', price))
-    except Exception:
-        price.replace(',','')
+    # print('After: ', price)
+    price = Decimal(sub(r'[^\d.]', '', price))
 
     return int(price)

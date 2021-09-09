@@ -47,12 +47,12 @@ def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
     decimal_promotional_price = convert_price(remove_whitespaces(promotional_price))
     decimal_price = convert_price(remove_whitespaces(price))
 
-    if promotional_price == '' or decimal_promotional_price > decimal_price:
-        details['Preço promocional'] = [remove_whitespaces(price)] 
-        details['Preço'] = [remove_whitespaces(promotional_price)]
-    else:
-        details['Preço promocional'] = [remove_whitespaces(promotional_price)]
+    if remove_whitespaces(promotional_price) == '' or decimal_promotional_price > decimal_price:
+        details['Preço promocional'] = [remove_whitespaces(promotional_price)]  
         details['Preço'] = [remove_whitespaces(price)]
+    else:
+        details['Preço promocional'] = [remove_whitespaces(price)]
+        details['Preço'] = [remove_whitespaces(promotional_price)] 
     details['Url Externa'] = [url]
     details['Texto do botão'] = ["Ver produto"]
     details['Short description'] = [specs]
