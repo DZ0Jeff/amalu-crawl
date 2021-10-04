@@ -6,13 +6,15 @@ from flask.helpers import send_file, url_for
 from flask_executor import Executor
 from werkzeug.utils import redirect
 from flask_cors import CORS
-from src.models.Shopee import crawl_shopee
-from src.models.aliexpress import crawl_aliexpress
-
-from src.models.Amazon import crawl_amazon
-from src.models.magazinei9bux import crawl_magazinevoce
 from src.utils import delete_product
 from src.models import init_app
+
+from src.models.Shopee import crawl_shopee
+from src.models.aliexpress import crawl_aliexpress
+from src.models.Amazon import crawl_amazon
+from src.models.magazinei9bux import crawl_magazinevoce
+
+from src.controllers.products import load_products
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -25,7 +27,6 @@ executor = Executor(app)
 app.config['EXECUTOR_MAX_WORKERS'] = 1
 app.config['EXECUTOR_TYPE'] = 'thread'
 app.config['EXECUTOR_PROPAGATE_EXCEPTIONS'] = True
-# redirect_limit = []
 
 
 @app.route('/')
@@ -40,6 +41,37 @@ def index():
             } 
         }
     )
+
+
+@app.route('/products', methods=['POST'])
+def products():
+    links = request.json
+    namefile = "products"
+    delete_product('products.csv')
+
+    executor.submit_stored('products', load_products, links, ROOT_DIR, namefile)
+    return redirect(url_for('get_products')) 
+
+
+@app.route('/get_products')
+def get_products():
+    filename = 'products.csv'
+
+    if not executor.futures.done('products'):
+        sleep(15)
+        return redirect(url_for('get_products')) 
+
+    future = executor.futures.pop('products')    
+    if os.path.exists(filename):
+        print(future.result())
+        if future.result().startswith('500'):
+            return "Internal server error", 500
+
+        return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', download_name=filename ,as_attachment=True, max_age=-1)
+    
+    else:
+        return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!"
+
 
 
 @app.route('/amazon')
@@ -76,7 +108,7 @@ def magazinei9bux_get():
     if link == '' and link.split('/')[2] != "www.magazinevoce.com.br":
        return 'Insira um link válido!'
 
-    filename = crawl_magazinevoce(link,'Magalu')
+    filename = crawl_magazinevoce(link, 'Magalu')
 
     if not isinstance(filename, str):
         return f"Um erro aconteceu: {filename}"

@@ -39,12 +39,12 @@ def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
         return
 
     details = dict()
-    details['Sku'] = [remove_whitespaces(sku)]
     details['Type'] = ["external"]
+    details['Sku'] = [remove_whitespaces(sku)]
     details['Nome'] = [title]
-    details['Categorias'] = [f"{store} > {category}"]
     details['Preço promocional'] = [remove_whitespaces(promotional_price)]
     details['Preço'] = [remove_whitespaces(price)]
+    details['Categorias'] = [f"{store} > {category}"]
     details['Url Externa'] = [url]
     details['Texto do botão'] = ["Ver produto"]
     details['Short description'] = [specs]

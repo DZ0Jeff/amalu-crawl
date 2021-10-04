@@ -141,17 +141,22 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     
 
     product['Tipo'] = ["external"]
-    product["Categorias"] = [category]
     product["Sku"] = [sku]
     product["Nome"] = [title]
 
     decimal_price = convert_price(price)
     decimal_promotional_price = convert_price(promotiona_price)
 
+    # if decimal_price == '':
+    #     decimal_price = 0
+    
+    # if decimal_promotional_price == '':
+    #     decimal_promotional_price = 0
+
     print('Preço: ', decimal_price)
     print('Preço promocional: ', decimal_promotional_price)
 
-    if price == '' or decimal_promotional_price > decimal_price:
+    if price == '' or promotiona_price == '' or decimal_promotional_price > decimal_price:
         print('> invertendo os preços')
         product["Preço promocional"] = [price] 
         product["Preço"] = [promotiona_price]
@@ -159,11 +164,13 @@ def crawl_aliexpress(url, root_path, nameOfFile):
         print('> Preços originais')
         product["Preço promocional"] = [promotiona_price]
         product["Preço"] = [price]
-    product['Texto do botão'] = ["Ver produto"]
+
+    product["Categorias"] = [category]
     product["Url externa"] = [url]
-    product["Descrição curta"] = [tecnical_content]
+    product['Texto do botão'] = ["Ver produto"]
+    product['Short description'] = [tecnical_content]
     product["Descrição"] = [descryption]
-    product["Images"] = [", ".join(img_src)]
+    product['Imagens'] = [", ".join(img_src)]
     
     # print('Price: ', product['Preço'])
     # print('Promotional price: ', product['Preço promocional'])
@@ -172,6 +179,6 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     # print(price)
     # print(promotiona_price)
     # [print(f"{index}: \t{content}") for index, content in product.items()]
-    dataToExcel(product, nameOfFile)
+    dataToExcel(product, f"{nameOfFile}.csv")
     print(f'> Arquivo {nameOfFile} salvo com sucesso!')
     return nameOfFile

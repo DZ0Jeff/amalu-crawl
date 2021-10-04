@@ -123,8 +123,8 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile="Amazon"):
                 details['Preço Promocional'] = [remove_whitespaces(price)]
                 details['Preço'] = [remove_whitespaces(promotional_price)]
             else:
-                details['Preço Promocional'] = [remove_whitespaces(price)]
-                details['Preço'] = [remove_whitespaces(promotional_price)] 
+                details['Preço Promocional'] = [remove_whitespaces(promotional_price)]
+                details['Preço'] = [remove_whitespaces(price)] 
         except Exception:
             details['Preço Promocional'] = [remove_whitespaces(promotional_price)]
             details['Preço'] = [remove_whitespaces(price)] 
