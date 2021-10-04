@@ -73,7 +73,6 @@ def get_products():
         return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!"
 
 
-
 @app.route('/amazon')
 def amazon_download():
     delete_product('Amazon.csv')
