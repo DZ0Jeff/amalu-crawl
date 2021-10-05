@@ -1,3 +1,6 @@
+import eventlet
+eventlet.monkey_patch()
+
 import os
 from time import sleep
 
@@ -5,28 +8,32 @@ from flask import request, jsonify
 from flask.helpers import send_file, url_for
 from flask_executor import Executor
 from werkzeug.utils import redirect
-from flask_cors import CORS
 from src.utils import delete_product
-from src.models import init_app
 
+from src.models import app, socketio
 from src.models.Shopee import crawl_shopee
 from src.models.aliexpress import crawl_aliexpress
 from src.models.Amazon import crawl_amazon
 from src.models.magazinei9bux import crawl_magazinevoce
 
 from src.controllers.products import load_products
+from flask_socketio import emit, namespace
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-app = init_app()
-CORS(app, expose_headers=["Content-Disposition"])
 executor = Executor(app)
 
 app.config['EXECUTOR_MAX_WORKERS'] = 1
 app.config['EXECUTOR_TYPE'] = 'thread'
 app.config['EXECUTOR_PROPAGATE_EXCEPTIONS'] = True
+
+
+@socketio.on('connection')
+def init_connection(msg):
+    print('Status: ', msg)
+    socketio.emit('init', 'Resposta recebida!', broadcast=True, namespace="/")
 
 
 @app.route('/')
@@ -54,6 +61,17 @@ def products():
     return redirect(url_for('get_products')) # "redirect", 302  
 
 
+@socketio.on('products')
+def send_products(links):
+    namefile = "products"
+    delete_product('products.csv')
+    emit('message', 'Iniciando importação...', broadcast=True, namespace="/")
+
+    load_products(links, ROOT_DIR, namefile)
+    print('A enviar dados...')
+    return redirect(url_for('download_products'))
+
+
 @app.route('/get_products')
 def get_products():
     filename = 'products.csv'
@@ -73,6 +91,14 @@ def get_products():
     else:
         return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!"
 
+
+@app.route('/download_products')
+def download_products():
+    filename = 'products.csv'
+    if os.path.exists(filename):
+        return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', download_name=filename ,as_attachment=True, max_age=-1)
+
+    return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!", 500    
 
 @app.route('/amazon')
 def amazon_download():
@@ -199,4 +225,4 @@ def error_image():
 
 if __name__ == "__main__":
     # app.debug = True
-    app.run()
+    socketio.run(app, host='0.0.0.0')
