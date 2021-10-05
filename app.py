@@ -38,6 +38,7 @@ def index():
                 '/magazinevoce': 'Crawl magazinei9bux product details, args: link of product',
                 '/aliexpress': 'Crawl aliexpress product details, args: link of product',
                 # '/shopee': 'Crawl shopee product details, args: link of product'
+                '/products': "Crawl all selected stores, args: response.json"
             } 
         }
     )
