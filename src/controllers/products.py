@@ -18,6 +18,8 @@ def load_products(links, ROOT_DIR, namefile):
             elif link != '' and link.split('/')[2] == "pt.aliexpress.com.br" or link != '' and link.split('/')[2] == "pt.aliexpress.com":
                 print('> Iniciando Aliexpress...')
                 crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile=namefile)
+        
+        return "success", 200
 
     except Exception as error:
         print(error)

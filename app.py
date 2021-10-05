@@ -50,7 +50,7 @@ def products():
     delete_product('products.csv')
 
     executor.submit_stored('products', load_products, links, ROOT_DIR, namefile)
-    return redirect(url_for('get_products')) 
+    return redirect(url_for('get_products')) # "redirect", 302  
 
 
 @app.route('/get_products')
@@ -59,12 +59,12 @@ def get_products():
 
     if not executor.futures.done('products'):
         sleep(15)
-        return redirect(url_for('get_products')) 
+        return redirect(url_for('get_products')) # "loading...", 302 
 
     future = executor.futures.pop('products')    
     if os.path.exists(filename):
         print(future.result())
-        if future.result().startswith('500'):
+        if future.result()[-1] == 500:
             return "Internal server error", 500
 
         return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', download_name=filename ,as_attachment=True, max_age=-1)
