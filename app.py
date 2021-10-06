@@ -68,7 +68,8 @@ def send_products(links):
     emit('message', 'Iniciando importação...', broadcast=True, namespace="/")
 
     load_products(links, ROOT_DIR, namefile)
-    print('A enviar dados...')
+    emit('message', 'Importação concluída!')
+    print('Importação concluída!')
     return redirect(url_for('download_products'))
 
 

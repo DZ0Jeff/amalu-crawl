@@ -18,7 +18,6 @@ def load_products(links, ROOT_DIR, namefile):
                 crawl_magazinevoce(link, namefile)
             
             elif link != '' and link.split('/')[2] == "pt.aliexpress.com.br" or link != '' and link.split('/')[2] == "pt.aliexpress.com":
-                emit("message",'> Iniciando Aliexpress...')
                 crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile=namefile)
         
         return "success", 200
