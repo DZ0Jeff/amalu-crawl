@@ -51,16 +51,6 @@ def index():
     )
 
 
-@app.route('/products', methods=['POST'])
-def products():
-    links = request.json
-    namefile = "products"
-    delete_product('products.csv')
-
-    executor.submit_stored('products', load_products, links, ROOT_DIR, namefile)
-    return redirect(url_for('get_products')) # "redirect", 302  
-
-
 @socketio.on('products')
 def send_products(links):
     namefile = "products"
@@ -145,7 +135,7 @@ def magazinei9bux_get():
 
 @app.route('/aliexpress')
 def aliexpress_download():
-    name_file = 'aliexpress.csv'
+    name_file = 'aliexpress'
     delete_product(name_file)
     link = request.args.get('url')
 

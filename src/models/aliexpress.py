@@ -153,8 +153,8 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     # if decimal_promotional_price == '':
     #     decimal_promotional_price = 0
 
-    print('Preço: ', decimal_price)
-    print('Preço promocional: ', decimal_promotional_price)
+    # print('Preço: ', decimal_price)
+    # print('Preço promocional: ', decimal_promotional_price)
 
     if price == '' or promotiona_price == '' or decimal_promotional_price > decimal_price:
         print('> invertendo os preços')
@@ -172,13 +172,10 @@ def crawl_aliexpress(url, root_path, nameOfFile):
     product["Descrição"] = [descryption]
     product['Imagens'] = [", ".join(img_src)]
     
-    # print('Price: ', product['Preço'])
-    # print('Promotional price: ', product['Preço promocional'])
+    print('Price: ', product['Preço'])
+    print('Promotional price: ', product['Preço promocional'])
 
     print('> Salvando em arquivo...')
-    # print(price)
-    # print(promotiona_price)
-    # [print(f"{index}: \t{content}") for index, content in product.items()]
     dataToExcel(product, f"{nameOfFile}.csv")
     print(f'> Arquivo {nameOfFile} salvo com sucesso!')
     return nameOfFile

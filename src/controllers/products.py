@@ -7,6 +7,9 @@ from src.models.magazinei9bux import crawl_magazinevoce
 def load_products(links, ROOT_DIR, namefile):
     try:
         for index, link in enumerate(links):
+            if link == "":
+                continue
+
             emit("message", f"extraíndo {index + 1} de {len(links)} sites...")
             print(f"> Link: {link}")
             test_link = link.split('/')[2]
@@ -14,10 +17,10 @@ def load_products(links, ROOT_DIR, namefile):
             if (test_link == "www.amazon.com.br" or test_link == "www.amazon.com"):
                 crawl_amazon(link, ROOT_DIR, namefile)
             
-            elif link != '' and link.split('/')[2] == "www.magazinevoce.com.br":
+            elif test_link == "www.magazinevoce.com.br":
                 crawl_magazinevoce(link, namefile)
             
-            elif link != '' and link.split('/')[2] == "pt.aliexpress.com.br" or link != '' and link.split('/')[2] == "pt.aliexpress.com":
+            elif test_link == "pt.aliexpress.com" or test_link == "www.aliexpress.com.br":
                 crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile=namefile)
         
         return "success", 200
