@@ -52,15 +52,17 @@ def index():
 
 
 @socketio.on('products')
-def send_products(links):
+def send_products(links, button_text):
     namefile = "products"
     delete_product('products.csv')
     emit('message', 'Iniciando importação...', broadcast=True, namespace="/")
 
-    load_products(links, ROOT_DIR, namefile)
-    emit('message', 'Importação concluída!')
-    print('Importação concluída!')
-    return redirect(url_for('download_products'))
+    print(links)
+    print(button_text)
+    # load_products(links, ROOT_DIR, namefile)
+    # emit('message', 'Importação concluída!')
+    # print('Importação concluída!')
+    # return redirect(url_for('download_products'))
 
 
 @app.route('/get_products')
