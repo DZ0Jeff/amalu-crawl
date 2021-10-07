@@ -6,7 +6,7 @@ from utils.setup import setSelenium
 from utils.webdriver_handler import dynamic_page
 
 
-def crawl_amazon(url, ROOT_DIR, nameOfFile="Amazon"):
+def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text):
     
     url = str(url)
     print('> Iniciando Amazon crawler...')
@@ -131,7 +131,7 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile="Amazon"):
         
         details['Categorias'] = [f"{store} > {remove_whitespaces(category)}"]
         details['Url externa'] = [url]
-        details['Texto do botão'] = ["Ver produto"]
+        details['Texto do botão'] = [button_text]
         details['Short description'] = [specs]
         details['Descrição'] = [f"{remove_whitespaces(description)}\n\nDescrição Técnica\n\n{tecnical_details}{aditional_info}"]
         details['Imagens'] = [galery]

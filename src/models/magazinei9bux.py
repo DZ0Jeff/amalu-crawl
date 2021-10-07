@@ -4,7 +4,7 @@ from utils.file_handler import dataToExcel
 from bs4 import NavigableString
 
 
-def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
+def crawl_magazinevoce(url, nameOfFile, verbose=False, button_text="Ver produto"):
     print('> iniciando magazinei9bux crawler...')
     soap = init_crawler(url)
 
@@ -46,7 +46,7 @@ def crawl_magazinevoce(url, nameOfFile="Magazinevocê", verbose=False):
     details['Preço'] = [remove_whitespaces(price)]
     details['Categorias'] = [f"{store} > {category}"]
     details['Url Externa'] = [url]
-    details['Texto do botão'] = ["Ver produto"]
+    details['Texto do botão'] = [button_text]
     details['Short description'] = [specs]
     details['Descrição'] = [f"{remove_whitespaces(description)}\n\nDescrição\n\n{tecnical_details}"]
     details['Imagens'] = [galery]

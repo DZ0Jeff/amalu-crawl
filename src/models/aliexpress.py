@@ -12,7 +12,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def crawl_aliexpress(url, root_path, nameOfFile):
+def crawl_aliexpress(url, root_path, nameOfFile, button_text):
 
 
     def click_on_list(navlist, location, driver):
@@ -167,7 +167,7 @@ def crawl_aliexpress(url, root_path, nameOfFile):
 
     product["Categorias"] = [category]
     product["Url externa"] = [url]
-    product['Texto do botão'] = ["Ver produto"]
+    product['Texto do botão'] = [button_text]
     product['Short description'] = [tecnical_content]
     product["Descrição"] = [descryption]
     product['Imagens'] = [", ".join(img_src)]

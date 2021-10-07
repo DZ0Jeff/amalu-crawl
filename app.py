@@ -57,12 +57,10 @@ def send_products(links, button_text):
     delete_product('products.csv')
     emit('message', 'Iniciando importação...', broadcast=True, namespace="/")
 
-    print(links)
-    print(button_text)
-    # load_products(links, ROOT_DIR, namefile)
-    # emit('message', 'Importação concluída!')
-    # print('Importação concluída!')
-    # return redirect(url_for('download_products'))
+    load_products(links, ROOT_DIR, namefile, button_text)
+    emit('message', 'Importação concluída!')
+    print('Importação concluída!')
+    return redirect(url_for('download_products'))
 
 
 @app.route('/get_products')
