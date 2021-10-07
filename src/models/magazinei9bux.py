@@ -4,7 +4,7 @@ from utils.file_handler import dataToExcel
 from bs4 import NavigableString
 
 
-def crawl_magazinevoce(url, nameOfFile, verbose=False, button_text="Ver produto"):
+def crawl_magazinevoce(url, nameOfFile, button_text, verbose=False):
     print('> iniciando magazinei9bux crawler...')
     soap = init_crawler(url)
 
