@@ -58,10 +58,10 @@ def crawl_magazinevoce(url, nameOfFile, button_text="Ver produto", verbose=False
     # print(promotional_price)
     print('> Salvando resultados...')
     if update:
-        update_by_sku(details['SKU'], details)
+        update_by_sku(details['SKU'][0], details)
 
     else:
         insert_products_in_database(details)
     
-    dataToExcel(details, f'{nameOfFile}.csv')
+    # dataToExcel(details, f'{nameOfFile}.csv')
     return f'{nameOfFile}.csv'

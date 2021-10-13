@@ -29,9 +29,8 @@ def crawl_aliexpress(url, root_path, nameOfFile, button_text="Ver produto", upda
 
 
     driver = setSelenium(root_path, False)
-    driver.execute_cdp_cmd("Page.setGeolocationOverride", {"latitude": -23.5660791, "longitude": -46.652984, "accuracy": 100 })
-    driver.get(url)
     try:
+        driver.get(url)
         print('> iniciando...')
         # select_region(driver)
         
@@ -105,6 +104,7 @@ def crawl_aliexpress(url, root_path, nameOfFile, button_text="Ver produto", upda
             # Banner
             try:
                 price = str(soap.find('span', class_='uniform-banner-box-price').get_text())
+                print(price)
                 if price.find('-') != -1:
                     price = price.split('-')[0].strip()
                 
@@ -147,8 +147,13 @@ def crawl_aliexpress(url, root_path, nameOfFile, button_text="Ver produto", upda
 
     decimal_price = convert_price(price)
     decimal_promotional_price = convert_price(promotiona_price)
+    print(f'Preço: {decimal_price}')
+    print(f'Preço promocional: {decimal_promotional_price}')
 
-    if price == '' or promotiona_price == '' or decimal_promotional_price > decimal_price:
+    if isinstance(decimal_promotional_price, str):
+        decimal_promotional_price = 0
+
+    if promotiona_price != '' or decimal_promotional_price > decimal_price:
         print('> invertendo os preços')
         product["Preço Promocional"] = [price] 
         product["Preço"] = [promotiona_price]
@@ -164,13 +169,13 @@ def crawl_aliexpress(url, root_path, nameOfFile, button_text="Ver produto", upda
     product['Descrição'] = [descryption]
     product['Imagens'] = [", ".join(img_src)]
     
-    # print('Price: ', product['Preço'])
-    # print('Promotional price: ', product['Preço Promocional'])
+    print('Price: ', product['Preço'])
+    print('Promotional price: ', product['Preço Promocional'])
 
     print('> Salvando em arquivo...')
-    dataToExcel(product, f"{nameOfFile}.csv")
+    # dataToExcel(product, f"{nameOfFile}.csv")
     if update:
-        update_by_sku(product['SKU'], product)
+        update_by_sku(product['SKU'][0], product)
     else:
         insert_products_in_database(product)
     print(f'> Arquivo {nameOfFile} salvo com sucesso!')

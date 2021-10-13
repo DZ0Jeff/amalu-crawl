@@ -3,7 +3,7 @@ from src.models import db
 
 
 def insert_products_in_database(product_info):
-    # db.create_all()
+    db.create_all()
     # products = select_products_from_database()
     # for product in products:
     #     if product.sku == product_info["SKU"][0] and product.price == product_info["Preço"][0]:
@@ -49,16 +49,16 @@ def delete_by_sku(sku):
 
 def update_by_sku(sku, product_info):
     product = Product.query.filter_by(sku=sku).first()
-    product.type_product=product_info["Type"] 
-    product.sku=product_info["SKU"] 
-    product.name=product_info["Nome"]
-    product.promotional_price=product_info["Preço Promocional"] 
-    product.price=product_info["Preço"] 
-    product.category=product_info["Categorias"] 
-    product.external_url=product_info["Url externa"] 
-    product.button_text=product_info['Texto do botão'] 
-    product.short_description=product_info['Short description'] 
-    product.description=product_info["Descrição"]
-    product.images=product_info['Imagens']
+    product.type_product            = str(product_info["Type"][0])
+    product.sku                     = str(product_info["SKU"][0])
+    product.name                    = str(product_info["Nome"][0])
+    product.promotional_price       = str(product_info["Preço Promocional"][0]) 
+    product.price= "R$1,000.00"     #str(product_info["Preço"][0]) 
+    product.category                = str(product_info["Categorias"][0])
+    product.external_url            = str(product_info["Url externa"][0]) 
+    product.button_text             = str(product_info['Texto do botão'][0]) 
+    product.short_description       = str(product_info['Short description'][0]) 
+    product.description             = str(product_info["Descrição"][0])
+    product.images                  = str(product_info['Imagens'][0])
     
     db.session.commit()

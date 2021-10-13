@@ -139,12 +139,11 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=Fa
 
         # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
         print('> Salvando em arquivo...')
-        dataToExcel(details, f'{nameOfFile}.csv')
         if update:
-            update_by_sku(details['SKU'], details)
-
+            update_by_sku(details['SKU'][0], details)
         else:
             insert_products_in_database(details)
+        # dataToExcel(details, f'{nameOfFile}.csv')
         print(f'> Arquivo {nameOfFile} salvo com sucesso!')
         return f'{nameOfFile}.csv'
 
