@@ -1,6 +1,8 @@
 import eventlet
 eventlet.monkey_patch()
 
+from src.controllers.database import delete_all_database, select_products_from_database
+
 import os
 from time import sleep
 
@@ -10,14 +12,15 @@ from flask_executor import Executor
 from werkzeug.utils import redirect
 from src.utils import delete_product
 
-from src.models import app, socketio
+from src.models import app, socketio, db
 from src.models.Shopee import crawl_shopee
 from src.models.aliexpress import crawl_aliexpress
 from src.models.Amazon import crawl_amazon
 from src.models.magazinei9bux import crawl_magazinevoce
+from utils.file_handler import dataToExcel
 
 from src.controllers.products import load_products
-from flask_socketio import emit, namespace
+from flask_socketio import emit
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -28,12 +31,6 @@ executor = Executor(app)
 app.config['EXECUTOR_MAX_WORKERS'] = 1
 app.config['EXECUTOR_TYPE'] = 'thread'
 app.config['EXECUTOR_PROPAGATE_EXCEPTIONS'] = True
-
-
-@socketio.on('connection')
-def init_connection(msg):
-    print('Status: ', msg)
-    socketio.emit('init', 'Resposta recebida!', broadcast=True, namespace="/")
 
 
 @app.route('/')
@@ -50,9 +47,17 @@ def index():
         }
     )
 
+@socketio.on('connection')
+def init_connection(msg):
+    print('Status: ', msg)
+    socketio.emit('init', 'Resposta recebida!', broadcast=True, namespace="/")
+
+    if len(select_products_from_database()) > 0:
+        emit('check', 'ACK!', broadcast=True, namespace="/")
+
 
 @socketio.on('products')
-def send_products(links, button_text):
+def send_products(links, button_text="Ver produto"):
     namefile = "products"
     delete_product('products.csv')
     emit('message', 'Iniciando importação...', broadcast=True, namespace="/")
@@ -60,36 +65,35 @@ def send_products(links, button_text):
     load_products(links, ROOT_DIR, namefile, button_text)
     emit('message', 'Importação concluída!')
     print('Importação concluída!')
-    return redirect(url_for('download_products'))
+    return redirect(url_for('show_products'))
 
 
-@app.route('/get_products')
-def get_products():
+@app.route('/show')
+def show_products():
+    products = select_products_from_database()
     filename = 'products.csv'
 
-    if not executor.futures.done('products'):
-        sleep(15)
-        return redirect(url_for('get_products')) # "loading...", 302 
-
-    future = executor.futures.pop('products')    
-    if os.path.exists(filename):
-        print(future.result())
-        if future.result()[-1] == 500:
-            return "Internal server error", 500
-
-        return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', download_name=filename ,as_attachment=True, max_age=-1)
+    for product in products:
+        target = dict()
+        target['type'] = [product.type_product]
+        target['SKU'] = [product.sku]
+        target['Nome'] = [product.name]
+        target['Preço Promocional'] = [product.promotional_price]
+        target['Preço'] = [product.price]
+        target['Categorias'] = [product.category]
+        target['Url externa'] = [product.external_url]
+        target['Texto do botão'] = [product.button_text]
+        target['Short description'] = [product.short_description]
+        target['Descrição'] = [product.description]
+        target['Imagens'] = [product.images]
     
-    else:
-        return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!"
-
-
-@app.route('/download_products')
-def download_products():
-    filename = 'products.csv'
+        dataToExcel(target, filename)
+    
     if os.path.exists(filename):
         return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', download_name=filename ,as_attachment=True, max_age=-1)
 
     return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!", 500    
+
 
 @app.route('/amazon')
 def amazon_download():
@@ -103,7 +107,9 @@ def amazon_download():
     if not (test_link == "www.amazon.com.br" or test_link == "www.amazon.com"):
         return "Insira o um link válido!"
 
-    executor.submit(crawl_amazon, link, ROOT_DIR, "Amazon")
+    print('> Iniciando...')
+    # executor.submit(crawl_amazon, link, ROOT_DIR, "Amazon")
+    crawl_amazon(link, ROOT_DIR, "Amazon")
     return redirect(url_for('amazon_get'))
 
 
@@ -204,6 +210,14 @@ def shopee_get():
     else:
         return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!"
 
+@app.route('/delete-products')
+def delete_products():
+    try:
+        delete_all_database()
+        return "Data deleted successsuly!"
+    
+    except Exception:
+        raise
 
 @app.route('/error')
 def error_image():
@@ -215,5 +229,6 @@ def error_image():
 
 
 if __name__ == "__main__":
-    # app.debug = True
-    socketio.run(app, host='0.0.0.0')
+    db.create_all()
+    socketio.run(app, host='0.0.0.0') # host='0.0.0.0'
+    # app.run()

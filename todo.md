@@ -1,4 +1,0 @@
-- check if is that a way to see if all futures is done
-- check if is that a way to run inner functions synchonisity
-- check progrees via frontend
-- check if csv is sending correnctly

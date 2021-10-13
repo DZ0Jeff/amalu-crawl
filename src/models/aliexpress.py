@@ -1,3 +1,4 @@
+from src.controllers.database import insert_products_in_database, update_by_sku
 from utils.parser_handler import init_parser
 from utils.file_handler import dataToExcel
 from utils.setup import setSelenium
@@ -12,7 +13,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def crawl_aliexpress(url, root_path, nameOfFile, button_text):
+def crawl_aliexpress(url, root_path, nameOfFile, button_text="Ver produto", update=False):
 
 
     def click_on_list(navlist, location, driver):
@@ -140,42 +141,37 @@ def crawl_aliexpress(url, root_path, nameOfFile, button_text):
         img_src = []
     
 
-    product['Tipo'] = ["external"]
-    product["Sku"] = [sku]
-    product["Nome"] = [title]
+    product['Type'] = ["external"]
+    product['SKU'] = [sku]
+    product['Nome'] = [title]
 
     decimal_price = convert_price(price)
     decimal_promotional_price = convert_price(promotiona_price)
 
-    # if decimal_price == '':
-    #     decimal_price = 0
-    
-    # if decimal_promotional_price == '':
-    #     decimal_promotional_price = 0
-
-    # print('Preço: ', decimal_price)
-    # print('Preço promocional: ', decimal_promotional_price)
-
     if price == '' or promotiona_price == '' or decimal_promotional_price > decimal_price:
         print('> invertendo os preços')
-        product["Preço promocional"] = [price] 
+        product["Preço Promocional"] = [price] 
         product["Preço"] = [promotiona_price]
     else:
         print('> Preços originais')
-        product["Preço promocional"] = [promotiona_price]
+        product["Preço Promocional"] = [promotiona_price]
         product["Preço"] = [price]
 
-    product["Categorias"] = [category]
-    product["Url externa"] = [url]
+    product['Categorias'] = [category]
+    product['Url externa'] = [url]
     product['Texto do botão'] = [button_text]
     product['Short description'] = [tecnical_content]
-    product["Descrição"] = [descryption]
+    product['Descrição'] = [descryption]
     product['Imagens'] = [", ".join(img_src)]
     
-    print('Price: ', product['Preço'])
-    print('Promotional price: ', product['Preço promocional'])
+    # print('Price: ', product['Preço'])
+    # print('Promotional price: ', product['Preço Promocional'])
 
     print('> Salvando em arquivo...')
     dataToExcel(product, f"{nameOfFile}.csv")
+    if update:
+        update_by_sku(product['SKU'], product)
+    else:
+        insert_products_in_database(product)
     print(f'> Arquivo {nameOfFile} salvo com sucesso!')
     return nameOfFile

@@ -1,11 +1,12 @@
 from flask_socketio import emit
+from src.controllers.database import select_products_from_database
 from src.models.aliexpress import crawl_aliexpress
 from src.models.Amazon import crawl_amazon
 from src.models.magazinei9bux import crawl_magazinevoce
 
 
-def load_products(links, ROOT_DIR, namefile, button_text="Ver produto"):
-    # print(button_text)
+def load_products(links, ROOT_DIR, namefile, button_text="Ver produto", update=False):
+
     try:
         for index, link in enumerate(links):
             if link == "":
@@ -19,16 +20,20 @@ def load_products(links, ROOT_DIR, namefile, button_text="Ver produto"):
             test_link = link.split('/')[2]
             print(f'> Base link: {test_link}')
             if (test_link == "www.amazon.com.br" or test_link == "www.amazon.com"):
-                crawl_amazon(url=link, ROOT_DIR=ROOT_DIR, nameOfFile=namefile, button_text=button_text)
+                crawl_amazon(url=link, ROOT_DIR=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update)
             
             elif test_link == "www.magazinevoce.com.br":
-                crawl_magazinevoce(url=link, nameOfFile=namefile, button_text=button_text)
+                crawl_magazinevoce(url=link, nameOfFile=namefile, button_text=button_text, update=update)
             
             elif test_link == "pt.aliexpress.com" or test_link == "www.aliexpress.com.br":
-                crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile=namefile, button_text=button_text)
+                crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update)
+        
+            if len(select_products_from_database()) > 0:
+                emit('check', 'ACK!', broadcast=True, namespace="/")
         
         return "success", 200
 
     except Exception as error:
         emit("message",error)
         return f"500: {error}"
+    

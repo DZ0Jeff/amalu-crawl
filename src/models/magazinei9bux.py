@@ -2,9 +2,10 @@ from src.utils import convert_price, find_magalu_images, get_magazine_specs, get
 from utils.parser_handler import init_crawler, remove_whitespaces
 from utils.file_handler import dataToExcel
 from bs4 import NavigableString
+from src.controllers.database import insert_products_in_database, update_by_sku
 
 
-def crawl_magazinevoce(url, nameOfFile, button_text, verbose=False):
+def crawl_magazinevoce(url, nameOfFile, button_text="Ver produto", verbose=False, update=False):
     print('> iniciando magazinei9bux crawler...')
     soap = init_crawler(url)
 
@@ -40,12 +41,12 @@ def crawl_magazinevoce(url, nameOfFile, button_text, verbose=False):
 
     details = dict()
     details['Type'] = ["external"]
-    details['Sku'] = [remove_whitespaces(sku)]
+    details['SKU'] = [remove_whitespaces(sku)]
     details['Nome'] = [title]
-    details['Preço promocional'] = [remove_whitespaces(promotional_price)]
+    details['Preço Promocional'] = [remove_whitespaces(promotional_price)]
     details['Preço'] = [remove_whitespaces(price)]
     details['Categorias'] = [f"{store} > {category}"]
-    details['Url Externa'] = [url]
+    details['Url externa'] = [url]
     details['Texto do botão'] = [button_text]
     details['Short description'] = [specs]
     details['Descrição'] = [f"{remove_whitespaces(description)}\n\nDescrição\n\n{tecnical_details}"]
@@ -56,5 +57,11 @@ def crawl_magazinevoce(url, nameOfFile, button_text, verbose=False):
     # print(price)
     # print(promotional_price)
     print('> Salvando resultados...')
+    if update:
+        update_by_sku(details['SKU'], details)
+
+    else:
+        insert_products_in_database(details)
+    
     dataToExcel(details, f'{nameOfFile}.csv')
     return f'{nameOfFile}.csv'

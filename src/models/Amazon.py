@@ -1,12 +1,13 @@
 import re
-from utils.parser_handler import init_crawler, init_parser, remove_whitespaces
+from src.controllers.database import insert_products_in_database, update_by_sku
+from utils.parser_handler import init_parser, remove_whitespaces
 from utils.file_handler import dataToExcel
 from src.utils import convert_price, format_table, getAmazonImageGalery, get_specs
 from utils.setup import setSelenium
 from utils.webdriver_handler import dynamic_page
 
 
-def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text):
+def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=False):
     
     url = str(url)
     print('> Iniciando Amazon crawler...')
@@ -139,10 +140,16 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text):
         # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
         print('> Salvando em arquivo...')
         dataToExcel(details, f'{nameOfFile}.csv')
+        if update:
+            update_by_sku(details['SKU'], details)
+
+        else:
+            insert_products_in_database(details)
         print(f'> Arquivo {nameOfFile} salvo com sucesso!')
         return f'{nameOfFile}.csv'
 
     
     except Exception as error:
         driver.quit()
+        print(error)
         return str(error)
