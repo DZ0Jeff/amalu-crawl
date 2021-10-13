@@ -21,6 +21,7 @@
 - [ ] add client listo to test
 - [ ] change to prod database
     - [ ] use another instance of database
+    - [ ] add .env to update database
 
 ## BUGS
 - [x] Socket não emite quando reseta o navegador
