@@ -20,7 +20,7 @@ def init_socket(app):
 
 
 def init_db(app):
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL') # "postgresql://zqzqwesw:4ZKV5N8pFTIvhzJ5V0iDSW1Ks3vTIi_d@fanny.db.elephantsql.com/zqzqwesw"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL').replace("://", "ql://", 1) # "postgresql://zqzqwesw:4ZKV5N8pFTIvhzJ5V0iDSW1Ks3vTIi_d@fanny.db.elephantsql.com/zqzqwesw"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db = SQLAlchemy(app)
     return db
