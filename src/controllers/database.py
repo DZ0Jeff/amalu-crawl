@@ -53,7 +53,7 @@ def update_by_sku(sku, product_info):
     product.sku                     = str(product_info["SKU"][0])
     product.name                    = str(product_info["Nome"][0])
     product.promotional_price       = str(product_info["Preço Promocional"][0]) 
-    product.price= "R$1,000.00"     #str(product_info["Preço"][0]) 
+    product.price                   = str(product_info["Preço"][0]) 
     product.category                = str(product_info["Categorias"][0])
     product.external_url            = str(product_info["Url externa"][0]) 
     product.button_text             = str(product_info['Texto do botão'][0]) 

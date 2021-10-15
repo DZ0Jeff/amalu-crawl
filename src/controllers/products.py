@@ -51,15 +51,15 @@ def update_produts(ROOT_DIR, namefile, button_text="Ver produto", update=True):
         links = select_products_from_database()
         for index, link in enumerate(links):
             print("Link: ", link.external_url)
-            # if link == "":
-            #     continue
+            if link.external_url == "":
+                continue
             
-            # if button_text == "":
-            #     button_text="Ver produto"
+            if button_text == "":
+                button_text="Ver produto"
 
-            # emit("message", f"Atualizado {index + 1} de {len(links)} sites...")
+            emit("message", f"Atualizado {index + 1} de {len(links)} sites...")
 
-            # print(f"> Link: {link}")
+            print(f"> Link: {link.external_url}")
             test_link = link.external_url.split('/')[2]
             # print(f'> Base link: {test_link}')
             if (test_link == "www.amazon.com.br" or test_link == "www.amazon.com"):

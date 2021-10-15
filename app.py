@@ -25,7 +25,6 @@ from flask_socketio import emit
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-
 executor = Executor(app)
 
 app.config['EXECUTOR_MAX_WORKERS'] = 1
@@ -66,7 +65,7 @@ def send_products(links, button_text="Ver produto"):
     emit('message', 'Importação concluída!')
     print('Importação concluída!')
     return redirect(url_for('show_products'))
-    
+
 
 @socketio.on('update')
 def update(button_text="Ver produto"):
@@ -78,10 +77,18 @@ def update(button_text="Ver produto"):
     return redirect(url_for('show_products'))
 
 
+@socketio.on('disconnect')
+def disconnect():
+    socketio.stop()
+    
+
 @app.route('/show')
 def show_products():
     products = select_products_from_database()
     filename = 'products.csv'
+    # button_text = request.args.get('button')
+    # if button_text == "":
+    #     button_text = "Ver produto"
 
     for product in products:
         target = dict()
