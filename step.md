@@ -17,14 +17,17 @@
     - [ ] Não usar muitos links de uma vez para evitar bloqueio
 
 - [x] add error handler on socket
-- [ ] add 2nd list of links to test
-- [ ] add client listo to test
+- [x] add 2nd list of links to test
+- [x] add client list to test
 - [ ] change to prod database
     - [ ] use another instance of database
-    - [ ] add .env to update database
+    - [x] add .env to update database
+    - [ ] make the client create new database or create new database for given id
 
 ## BUGS
 - [x] Socket não emite quando reseta o navegador
 - [x] Reconectar ao estado atual quando recarregar página
 - [x] Amazon Stale element... - Ocasional, depende da internet
 - [x] promotional price is string
+- [ ] wont notify back when page is refresh
+- [ ] add new socket session when update instead of close aond start new or persist state socket when page is reload
