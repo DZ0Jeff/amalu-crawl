@@ -19,7 +19,7 @@ from src.models.Amazon import crawl_amazon
 from src.models.magazinei9bux import crawl_magazinevoce
 from utils.file_handler import dataToExcel
 
-from src.controllers.products import load_products
+from src.controllers.products import load_products, update_produts
 from flask_socketio import emit
 
 
@@ -59,20 +59,22 @@ def init_connection(msg):
 @socketio.on('products')
 def send_products(links, button_text="Ver produto"):
     namefile = "products"
-    delete_product('products.csv')
-
-    if 'update' in links:
-        emit('message', 'Iniciando atualização de produtos...', broadcast=True, namespace="/")
-        load_products(links, ROOT_DIR, namefile, button_text, update=True)
-        emit('message', 'Atualização concluída!')
-        print('Atualização concluída!')
-        return redirect(url_for('show_products'))
-
+    # delete_product('products.csv')
 
     emit('message', 'Iniciando importação...', broadcast=True, namespace="/")
     load_products(links, ROOT_DIR, namefile, button_text)
     emit('message', 'Importação concluída!')
     print('Importação concluída!')
+    return redirect(url_for('show_products'))
+
+
+@socketio.on('update')
+def update(button_text="Ver produto"):
+    namefile = "products"
+    emit('message', 'Iniciando atualização de produtos...', broadcast=True, namespace="/")
+    update_produts(ROOT_DIR, namefile, button_text, update=True)
+    emit('message', 'Atualização concluída!')
+    print('Atualização concluída!')
     return redirect(url_for('show_products'))
 
 

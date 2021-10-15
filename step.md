@@ -29,5 +29,6 @@
 - [x] Reconectar ao estado atual quando recarregar página
 - [x] Amazon Stale element... - Ocasional, depende da internet
 - [x] promotional price is string
+- [ ] update running on multitread instead of on process by time
 - [ ] wont notify back when page is refresh
 - [ ] add new socket session when update instead of close aond start new or persist state socket when page is reload
