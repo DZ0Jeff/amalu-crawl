@@ -63,14 +63,14 @@ def update_produts(ROOT_DIR, namefile, button_text="Ver produto", update=True):
             test_link = link.external_url.split('/')[2]
             # print(f'> Base link: {test_link}')
             if (test_link == "www.amazon.com.br" or test_link == "www.amazon.com"):
-                crawl_amazon(url=link, ROOT_DIR=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update)
+                crawl_amazon(url=link.external_url, ROOT_DIR=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update)
             
             elif test_link == "www.magazinevoce.com.br":
-                crawl_magazinevoce(url=link, nameOfFile=namefile, button_text=button_text, update=update)
+                crawl_magazinevoce(url=link.external_url, nameOfFile=namefile, button_text=button_text, update=update)
             
             elif test_link == "pt.aliexpress.com" or test_link == "www.aliexpress.com.br":
                 print('Extraíndo aliexpress...')
-                crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update)
+                crawl_aliexpress(url=link.external_url, root_path=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update)
         
             # if len(select_products_from_database()) > 0:
             #     emit('check', 'ACK!', broadcast=True, namespace="/")
