@@ -66,7 +66,7 @@ def send_products(links, button_text="Ver produto"):
     emit('message', 'Importação concluída!')
     print('Importação concluída!')
     return redirect(url_for('show_products'))
-
+    
 
 @socketio.on('update')
 def update(button_text="Ver produto"):
