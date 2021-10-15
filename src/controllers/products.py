@@ -48,31 +48,32 @@ def load_products(links, ROOT_DIR, namefile, button_text="Ver produto", update=F
 
 def update_produts(ROOT_DIR, namefile, button_text="Ver produto", update=True):
     try:
-        [print(link.external_url) for link in select_products_from_database()]
-        # for index, link in enumerate(select_products_from_database()):
-        #     if link == "":
-        #         continue
+        links = select_products_from_database()
+        for index, link in enumerate(links):
+            print("Link: ", link.external_url)
+            # if link == "":
+            #     continue
             
-        #     if button_text == "":
-        #         button_text="Ver produto"
+            # if button_text == "":
+            #     button_text="Ver produto"
 
-        #     emit("message", f"Atualizado {index + 1} de {len(links)} sites...")
+            # emit("message", f"Atualizado {index + 1} de {len(links)} sites...")
 
-        #     print(f"> Link: {link}")
-        #     test_link = link.split('/')[2]
-        #     print(f'> Base link: {test_link}')
-        #     if (test_link == "www.amazon.com.br" or test_link == "www.amazon.com"):
-        #         crawl_amazon(url=link, ROOT_DIR=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update)
+            # print(f"> Link: {link}")
+            # test_link = link.split('/')[2]
+            # print(f'> Base link: {test_link}')
+            # if (test_link == "www.amazon.com.br" or test_link == "www.amazon.com"):
+            #     crawl_amazon(url=link, ROOT_DIR=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update)
             
-        #     elif test_link == "www.magazinevoce.com.br":
-        #         crawl_magazinevoce(url=link, nameOfFile=namefile, button_text=button_text, update=update)
+            # elif test_link == "www.magazinevoce.com.br":
+            #     crawl_magazinevoce(url=link, nameOfFile=namefile, button_text=button_text, update=update)
             
-        #     elif test_link == "pt.aliexpress.com" or test_link == "www.aliexpress.com.br":
-        #         print('Extraíndo aliexpress...')
-        #         crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update)
+            # elif test_link == "pt.aliexpress.com" or test_link == "www.aliexpress.com.br":
+            #     print('Extraíndo aliexpress...')
+            #     crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update)
         
-        #     if len(select_products_from_database()) > 0:
-        #         emit('check', 'ACK!', broadcast=True, namespace="/")
+            # if len(select_products_from_database()) > 0:
+            #     emit('check', 'ACK!', broadcast=True, namespace="/")
 
     except Exception as error:
         emit("error", error)
