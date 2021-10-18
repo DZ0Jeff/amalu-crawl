@@ -99,7 +99,7 @@ def show_products():
         target.setdefault('Preço Promocional', [])
         target.setdefault('Preço', [])
         target.setdefault('Categorias', [])
-        target.setdefault('Url Externa', [])
+        target.setdefault('Url externa', [])
         target.setdefault('Texto do botão', [])
         target.setdefault('Short description', [])
         target.setdefault('Descrição', [])
