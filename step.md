@@ -19,16 +19,14 @@
 - [x] add error handler on socket
 - [x] add 2nd list of links to test
 - [x] add client list to test
-- [ ] change to prod database
-    - [ ] use another instance of database
+- [x] change to prod database
+    - [x] use another instance of database
     - [x] add .env to update database
-    - [ ] make the client create new database or create new database for given id
+    - [x] make the client create new database or create new database for given id
 
 ## BUGS
 - [x] Socket não emite quando reseta o navegador
 - [x] Reconectar ao estado atual quando recarregar página
 - [x] Amazon Stale element... - Ocasional, depende da internet
 - [x] promotional price is string
-- [ ] update running on multitread instead of on process by time
-- [ ] wont notify back when page is refresh
-- [ ] add new socket session when update instead of close aond start new or persist state socket when page is reload
+- [x] update running on multitread instead of on process by time

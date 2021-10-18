@@ -86,9 +86,9 @@ def disconnect():
 def show_products():
     products = select_products_from_database()
     filename = 'products.csv'
-    # button_text = request.args.get('button')
-    # if button_text == "":
-    #     button_text = "Ver produto"
+    button_text = request.args.get('button')
+    if button_text == "":
+        button_text = "Ver produto"
 
     for product in products:
         target = dict()
@@ -99,7 +99,7 @@ def show_products():
         target['Preço'] = [product.price]
         target['Categorias'] = [product.category]
         target['Url externa'] = [product.external_url]
-        target['Texto do botão'] = [product.button_text]
+        target['Texto do botão'] = [button_text]
         target['Short description'] = [product.short_description]
         target['Descrição'] = [product.description]
         target['Imagens'] = [product.images]
