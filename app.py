@@ -92,7 +92,7 @@ def show_products():
 
     target = dict()
     for product in products:
-        print('Before: ', [button_text_name])
+        # print('Before: ', [button_text_name])
         target.setdefault('type', [])
         target.setdefault('SKU', [])
         target.setdefault('Nome', [])
@@ -116,7 +116,7 @@ def show_products():
         target['Short description'].append(product.short_description)
         target['Descrição'].append(product.description)
         target['Imagens'].append(product.images)
-        print('After: ', target['Texto do botão'])
+        # print('After: ', target['Texto do botão'])
  
     dataToExcel(target, filename, custom=True)
     
