@@ -105,8 +105,8 @@ def show_products():
         target['Descrição'] = [product.description]
         target['Imagens'] = [product.images]
         print('After: ', target['Texto do botão'])
-
-        dataToExcel(target, filename)
+ 
+        dataToExcel(target, filename, custom=True)
     
     if os.path.exists(filename):
         return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', download_name=filename ,as_attachment=True, max_age=-1)
