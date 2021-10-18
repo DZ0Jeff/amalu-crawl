@@ -90,9 +90,9 @@ def show_products():
     if button_text_name == "":
         button_text_name = "Ver produto"
 
+    target = dict()
     for product in products:
         print('Before: ', [button_text_name])
-        target = dict()
         target['type'] = [product.type_product]
         target['SKU'] = [product.sku]
         target['Nome'] = [product.name]
@@ -106,7 +106,7 @@ def show_products():
         target['Imagens'] = [product.images]
         print('After: ', target['Texto do botão'])
  
-        dataToExcel(target, filename, custom=True)
+    dataToExcel(target, filename, custom=True)
     
     if os.path.exists(filename):
         return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', download_name=filename ,as_attachment=True, max_age=-1)
