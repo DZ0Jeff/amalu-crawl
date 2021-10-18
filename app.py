@@ -87,6 +87,7 @@ def show_products():
     products = select_products_from_database()
     filename = 'products.csv'
     button_text = request.args.get('button')
+    print(button_text)
     if button_text == "":
         button_text = "Ver produto"
 
