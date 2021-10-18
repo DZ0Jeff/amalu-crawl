@@ -89,10 +89,9 @@ def show_products():
     button_text_name = request.args.get('button')
     if button_text_name == "":
         button_text_name = "Ver produto"
-    
-    print(button_text_name)
 
     for product in products:
+        print('Before: ', [button_text_name])
         target = dict()
         target['type'] = [product.type_product]
         target['SKU'] = [product.sku]
@@ -105,7 +104,8 @@ def show_products():
         target['Short description'] = [product.short_description]
         target['Descrição'] = [product.description]
         target['Imagens'] = [product.images]
-    
+        print('After: ', target['Texto do botão'])
+
         dataToExcel(target, filename)
     
     if os.path.exists(filename):
