@@ -56,7 +56,7 @@ def save_to_html(data, title="test.html"):
 
 def dataToExcel(dataDict, filename):
     df = pd.DataFrame(dataDict)
-    df.to_csv(filename, mode="a", index=False, header=not os.path.exists(filename))
+    df.to_csv(filename, mode="w", index=False, header=not os.path.exists(filename))
 
 
 def read_html(filename="test.html"):
