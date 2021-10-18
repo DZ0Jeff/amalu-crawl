@@ -93,17 +93,29 @@ def show_products():
     target = dict()
     for product in products:
         print('Before: ', [button_text_name])
-        target['type'] = [product.type_product]
-        target['SKU'] = [product.sku]
-        target['Nome'] = [product.name]
-        target['Preço Promocional'] = [product.promotional_price]
-        target['Preço'] = [product.price]
-        target['Categorias'] = [product.category]
-        target['Url externa'] = [product.external_url]
-        target['Texto do botão'] = [button_text_name]
-        target['Short description'] = [product.short_description]
-        target['Descrição'] = [product.description]
-        target['Imagens'] = [product.images]
+        target.setdefault('type', [])
+        target.setdefault('SKU', [])
+        target.setdefault('Nome', [])
+        target.setdefault('Preço Promocional', [])
+        target.setdefault('Preço', [])
+        target.setdefault('Categorias', [])
+        target.setdefault('Url Externa', [])
+        target.setdefault('Texto do botão', [])
+        target.setdefault('Short description', [])
+        target.setdefault('Descrição', [])
+        target.setdefault('Imagens', [])
+
+        target['type'].append(product.type_product)
+        target['SKU'].append(product.sku)
+        target['Nome'].append(product.name)
+        target['Preço Promocional'].append(product.promotional_price)
+        target['Preço'].append(product.price)
+        target['Categorias'].append(product.category)
+        target['Url externa'].append(product.external_url)
+        target['Texto do botão'].append(button_text_name)
+        target['Short description'].append(product.short_description)
+        target['Descrição'].append(product.description)
+        target['Imagens'].append(product.images)
         print('After: ', target['Texto do botão'])
  
     dataToExcel(target, filename, custom=True)
