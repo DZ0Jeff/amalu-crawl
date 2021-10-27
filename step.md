@@ -1,5 +1,6 @@
 ## Tarefas do dia
 
+
 - [x] adicionar botão para baixar do banco de dados - Feito!
 - [x] Adicionar rota para deletar tudo - Feito!
 - [x] Não inserir novamente no banco de dados se os dados da sku for igual - Feito!
@@ -28,6 +29,7 @@
 - [ ] add amazon code on description
 - [ ] add keys to app
 - [ ] fix price on aliexpress
+- [ ] change to dev database
 
 ## BUGS
 - [x] Socket não emite quando reseta o navegador
