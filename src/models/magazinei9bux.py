@@ -63,5 +63,5 @@ def crawl_magazinevoce(url, nameOfFile, button_text="Ver produto", verbose=False
     else:
         insert_products_in_database(details)
     
-    # dataToExcel(details, f'{nameOfFile}.csv')
+    dataToExcel(details, f'{nameOfFile}.csv')
     return f'{nameOfFile}.csv'

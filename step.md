@@ -22,7 +22,12 @@
 - [x] change to prod database
     - [x] use another instance of database
     - [x] add .env to update database
-    - [x] make the client create new database or create new database for given id
+    - [ ] make the client create new database or create new database for given id
+- [ ] add delete by sku
+- [ ] add change product link
+- [ ] add amazon code on description
+- [ ] add keys to app
+- [ ] fix price on aliexpress
 
 ## BUGS
 - [x] Socket não emite quando reseta o navegador
