@@ -43,9 +43,12 @@ def delete_all_database():
 
 
 def delete_by_sku(sku):
-    db.session.query(Product).filter(Product.sku==sku).delete()
-    db.session.commit()
-
+    try:
+        db.session.query(Product).filter(Product.sku==sku).delete()
+        db.session.commit()
+    except:
+        db.session.rollback()
+        
 
 def update_by_sku(sku, product_info):
     product = Product.query.filter_by(sku=sku).first()

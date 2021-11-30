@@ -1,7 +1,7 @@
 import eventlet
 eventlet.monkey_patch()
 
-from src.controllers.database import delete_all_database, select_products_from_database
+from src.controllers.database import delete_all_database, delete_by_sku, select_products_from_database
 
 import os
 from time import sleep
@@ -249,6 +249,17 @@ def delete_products():
     
     except Exception:
         raise
+
+
+@app.route('/delete-sku')
+def delete_sku():
+    sku = request.args.get('sku')
+
+    print(f'Deleting {sku}')
+    delete_by_sku(sku)
+    emit(f'Produto: {sku} deletado com sucesso!')
+    return "200"
+
 
 @app.route('/error')
 def error_image():

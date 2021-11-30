@@ -74,6 +74,7 @@ def update_produts(ROOT_DIR, namefile, button_text="Ver produto", update=True):
         
             # if len(select_products_from_database()) > 0:
             #     emit('check', 'ACK!', broadcast=True, namespace="/")
+            return "success", 200
 
     except Exception as error:
         emit("error", error)
