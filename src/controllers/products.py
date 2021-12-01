@@ -15,7 +15,7 @@ def load_products(links, ROOT_DIR, namefile, button_text="Ver produto", update=F
                 continue
             
             if link in links_database:
-                print('Link já existe no banco de dados...')
+                emit("message", 'Link já existe no banco de dados...')
                 continue
 
             if button_text == "":
