@@ -84,6 +84,7 @@ def disconnect():
 
 @app.route('/show')
 def show_products():
+    print('Selecionando arquivos...')
     products = select_products_from_database()
     filename = 'products.csv'
     button_text_name = request.args.get('button')
@@ -121,6 +122,7 @@ def show_products():
     dataToExcel(target, filename, custom=True)
     
     if os.path.exists(filename):
+        print('baixando arquivo!')
         return send_file(os.path.join(ROOT_DIR, filename), mimetype='application/x-csv', download_name=filename ,as_attachment=True, max_age=-1)
 
     return "Erro ao gerar arquivo! ou link inserido fora do ar, tente novamente!", 500    
