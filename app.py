@@ -257,8 +257,7 @@ def delete_sku():
 
     print(f'Deleting {sku}')
     delete_by_sku(sku)
-    emit(f'Produto: {sku} deletado com sucesso!')
-    return "200"
+    return f'Produto: {sku} deletado com sucesso!'
 
 
 @app.route('/error')
