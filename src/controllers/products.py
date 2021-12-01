@@ -1,3 +1,4 @@
+import eventlet
 from flask_socketio import emit
 from src.controllers.database import select_products_from_database
 from src.models.aliexpress import crawl_aliexpress
@@ -15,7 +16,9 @@ def load_products(links, ROOT_DIR, namefile, button_text="Ver produto", update=F
                 continue
             
             if link in links_database:
-                emit("message", 'Link já existe no banco de dados...')
+                emit("message", f"Link já existe no banco de dados...")
+                print('Link já existe no banco de dados...')
+                eventlet.sleep(2.5)
                 continue
 
             if button_text == "":
