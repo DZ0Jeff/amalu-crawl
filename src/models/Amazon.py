@@ -139,7 +139,9 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=Fa
         details['Url externa'] = [url]
         details['Texto do botão'] = [button_text]
         details['Short description'] = [specs]
-        details['Descrição'] = [f"{amazon_iframe(remove_whitespaces(ean))}\n\n{remove_whitespaces(description)}\n\nDescrição Técnica\n\n{tecnical_details}{aditional_info}"]
+        asin_final = amazon_iframe(remove_whitespaces(ean))
+        print(asin_final)
+        details['Descrição'] = [f"{asin_final}\n\n{remove_whitespaces(description)}\n\nDescrição Técnica\n\n{tecnical_details}{aditional_info}"]
         details['Imagens'] = [galery]
 
         # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
