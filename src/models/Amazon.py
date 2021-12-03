@@ -9,6 +9,11 @@ from utils.webdriver_handler import dynamic_page
 
 def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=False):
     
+
+    def amazon_iframe(ASIN):
+        return f'<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=BR&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=vantajao09-20&language=pt_BR&marketplace=amazon&region=BR&placement={ASIN}&asins={ASIN}&linkId=6858d32406831f34277d5845ffb9e683&show_border=true&link_opens_in_new_window=true"></iframe>'
+
+
     url = str(url)
     print('> Iniciando Amazon crawler...')
     driver = setSelenium(root_path=ROOT_DIR, console=False)
@@ -134,7 +139,7 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=Fa
         details['Url externa'] = [url]
         details['Texto do botão'] = [button_text]
         details['Short description'] = [specs]
-        details['Descrição'] = [f"{remove_whitespaces(description)}\n\nDescrição Técnica\n\n{tecnical_details}{aditional_info}"]
+        details['Descrição'] = [f"{amazon_iframe(remove_whitespaces(ean))}\n\n{remove_whitespaces(description)}\n\nDescrição Técnica\n\n{tecnical_details}{aditional_info}"]
         details['Imagens'] = [galery]
 
         # [print(f"{title}: {detail[0]}") for title, detail in details.items()]

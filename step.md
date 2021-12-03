@@ -9,7 +9,7 @@
     - [x] Criar botão de atualizar e extrair separado
     - [x] Adicionar rota para atualizar 
         - [x] Podendo atualizar diretamente, ou inserindo sku para atualizar
-        - [ ] usar uma thread separada para atualizar os produtos
+        - [x] usar uma thread separada para atualizar os produtos
         - [ ] notificar via e-mail se concluiu com exito
 
 - [x] testar banco de dados com socket - Feito!
@@ -24,9 +24,9 @@
     - [x] use another instance of database
     - [x] add .env to update database
     - [ ] make the client create new database or create new database for given id
-- [ ] add delete by sku
-- [ ] add change product link
-- [ ] add amazon code on description
+- [x] add delete by sku
+- [x] add change product link
+- [x] add amazon code on description
 - [ ] add keys to app
 - [ ] fix price on aliexpress
 - [ ] change to dev database
