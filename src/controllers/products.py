@@ -37,8 +37,9 @@ def load_products(links, ROOT_DIR, namefile, button_text="Ver produto", update=F
             
             elif test_link == "pt.aliexpress.com" or test_link == "www.aliexpress.com.br":
                 print('Extraíndo aliexpress...')
-                crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update)
-        
+                if not crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update): 
+                    continue
+                
             if len(select_products_from_database()) > 0:
                 emit('check', 'ACK!', broadcast=True, namespace="/")
         
