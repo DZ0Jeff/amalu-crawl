@@ -12,6 +12,7 @@ def load_products(links, ROOT_DIR, namefile, button_text="Ver produto", update=F
         links_database = [link.external_url for link in select_products_from_database()]
 
         for index, link in enumerate(links):
+            print(index)
             if link == "":
                 continue
             
