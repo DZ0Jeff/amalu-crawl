@@ -12,7 +12,7 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=Fa
 
     def amazon_iframe(ASIN):
         return f'<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=BR&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=vantajao09-20&language=pt_BR&marketplace=amazon&region=BR&placement={ASIN}&asins={ASIN}&linkId=6858d32406831f34277d5845ffb9e683&show_border=true&link_opens_in_new_window=true"></iframe>'
-
+        ""
 
     url = str(url)
     print('> Iniciando Amazon crawler...')
@@ -96,24 +96,35 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=Fa
             # raw_price = soap.find('tr', id="conditionalPrice").text
             raw_price = soap.find('span', id="price").text
             price = remove_whitespaces(raw_price)
+            print("1 price: ", price)
 
         except Exception:
             try:
                 price = soap.find('span', id="price_inside_buybox").get_text()
+                print("2 price: ", price)
 
             except Exception:
-                price = ""
+                try:
+                    raw_price = soap.select('div#corePrice_feature_div span span.a-offscreen')[0].text
+                    print("3 raw_price: ", raw_price)
+                    price = raw_price.split('R$')[-1]
+                    print("3 preço: ", price)
+
+                except Exception:
+                    price = ""
 
         # promotional price
         try:
             promotional_price = soap.find('span', class_="priceBlockStrikePriceString a-text-strike").text
-            
+            print("promotional_price 1: ", promotional_price)
 
-        except AttributeError:
+        except Exception:
             try:
-                promotional_price = soap.find('td', class_="a-span12 a-color-secondary a-size-base").text    
+                promotional_price = soap.find('td', class_="a-span12 a-color-secondary a-size-base").select_one('span.a-offscreen').text   
+                print("promotional_price 2: ", promotional_price)
 
             except Exception:
+                print('Not found...')
                 promotional_price = ""
 
         details = dict()
@@ -127,11 +138,14 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=Fa
         try:
             if decimal_promotional_price > decimal_price:
                 details['Preço Promocional'] = [remove_whitespaces(price)]
+                print('preço se maior: ')
                 details['Preço'] = [remove_whitespaces(promotional_price)]
             else:
                 details['Preço Promocional'] = [remove_whitespaces(promotional_price)]
+                print('preço se menor: ')
                 details['Preço'] = [remove_whitespaces(price)] 
         except Exception:
+            print('Exceção...')
             details['Preço Promocional'] = [remove_whitespaces(promotional_price)]
             details['Preço'] = [remove_whitespaces(price)] 
         
@@ -143,7 +157,7 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=Fa
         details['Descrição'] = [f"{remove_whitespaces(description)}\n\nDescrição Técnica\n\n{tecnical_details}{aditional_info}"]
         details['Imagens'] = [galery]
 
-        # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
+        [print(f"{title}: {detail[0]}") for title, detail in details.items()]
         print('> Salvando em arquivo...')
         if update:
             update_by_sku(details['SKU'][0], details)

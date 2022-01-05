@@ -37,7 +37,7 @@ def crawl_magazinevoce(url, nameOfFile, button_text="Ver produto", verbose=False
 
     except Exception: 
         print('> Falha ao extrair dados! contate do administrador do sistema...')
-        return
+        raise
 
     details = dict()
     details['Type'] = ["external"]

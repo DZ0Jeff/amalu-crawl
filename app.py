@@ -94,6 +94,8 @@ def show_products():
     target = dict()
     for product in products:
         # print('Before: ', [button_text_name])
+        
+        # target.setdefault('id', [])
         target.setdefault('type', [])
         target.setdefault('SKU', [])
         target.setdefault('Nome', [])
@@ -106,6 +108,7 @@ def show_products():
         target.setdefault('Descrição', [])
         target.setdefault('Imagens', [])
 
+        # target['id'].append(product.id)
         target['type'].append(product.type_product)
         target['SKU'].append(product.sku)
         target['Nome'].append(product.name)

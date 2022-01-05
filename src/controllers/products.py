@@ -50,9 +50,10 @@ def load_products(links, ROOT_DIR, namefile, button_text="Ver produto", update=F
 
 
 def update_produts(ROOT_DIR, namefile, button_text="Ver produto", update=True):
-    try:
-        links = select_products_from_database()
-        for index, link in enumerate(links):
+    
+    links = select_products_from_database()
+    for index, link in enumerate(links):
+        try:
             print("Link: ", link.external_url)
             if link.external_url == "":
                 continue
@@ -77,8 +78,9 @@ def update_produts(ROOT_DIR, namefile, button_text="Ver produto", update=True):
         
             # if len(select_products_from_database()) > 0:
             #     emit('check', 'ACK!', broadcast=True, namespace="/")
-            return "success", 200
+                return "success", 200
 
-    except Exception as error:
-        emit("error", error)
-        return f"500: {error}"
+        except Exception as error:
+            emit("error", error)
+            # return f"500: {error}"
+            continue
