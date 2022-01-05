@@ -21,8 +21,13 @@ def crawl_magazinevoce(url, nameOfFile, button_text="Ver produto", verbose=False
             promotional_price = str(soap.find('div', class_="p-price").find('strong').text).replace("por", '')
         
         except AttributeError:
-            promotional_price = ''
-            price = str(soap.find('div', class_="p-price").find('strong').text).replace("por", '')
+            try:
+                promotional_price = ''
+                price = str(soap.find('div', class_="p-price").find('strong').text).replace("por", '')
+            
+            except Exception:
+                print('> Erro ao extraír o preço!')
+                return
         
         try:
             raw_tecnical_details = soap.find('table', class_="tab ficha-tecnica")
