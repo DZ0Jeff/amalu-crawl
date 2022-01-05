@@ -10,6 +10,7 @@ def crawl_magazinevoce(url, nameOfFile, button_text="Ver produto", verbose=False
     soap = init_crawler(url)
 
     print('> extraíndo informações...')
+    print(url)
     try:
         store = "Magalu" # url.split('/')[3]
         title = [element for element in soap.find('h3') if isinstance(element, NavigableString)][0].strip()
