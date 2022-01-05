@@ -28,8 +28,7 @@ def crawl_magazinevoce(url, nameOfFile, button_text="Ver produto", verbose=False
             
             except Exception:
                 print('> Erro ao extraír o preço!')
-                promotional_price = ""
-                price = ""
+                return "error"
         
         try:
             raw_tecnical_details = soap.find('table', class_="tab ficha-tecnica")
@@ -44,6 +43,7 @@ def crawl_magazinevoce(url, nameOfFile, button_text="Ver produto", verbose=False
 
     except Exception: 
         print('> Falha ao extrair dados! contate do administrador do sistema...')
+        return "error"
 
     details = dict()
     details['Type'] = ["external"]

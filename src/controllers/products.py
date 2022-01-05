@@ -11,7 +11,6 @@ def load_products(links, ROOT_DIR, namefile, button_text="Ver produto", update=F
     try:
         links_database = [link.external_url for link in select_products_from_database()]
 
-        print(len(links_database))
         for index, link in enumerate(links):
             if link == "":
                 continue
@@ -39,7 +38,7 @@ def load_products(links, ROOT_DIR, namefile, button_text="Ver produto", update=F
             elif test_link == "pt.aliexpress.com" or test_link == "www.aliexpress.com.br":
                 print('Extraíndo aliexpress...')
                 crawl_aliexpress(url=link, root_path=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update)
-                
+        
             if len(select_products_from_database()) > 0:
                 emit('check', 'ACK!', broadcast=True, namespace="/")
         
@@ -76,9 +75,9 @@ def update_produts(ROOT_DIR, namefile, button_text="Ver produto", update=True):
                 print('Extraíndo aliexpress...')
                 crawl_aliexpress(url=link.external_url, root_path=ROOT_DIR, nameOfFile=namefile, button_text=button_text, update=update)
         
-            # if len(select_products_from_database()) > 0:
-            #     emit('check', 'ACK!', broadcast=True, namespace="/")
-            return "success", 200
+        # if len(select_products_from_database()) > 0:
+        #     emit('check', 'ACK!', broadcast=True, namespace="/")
+        return "success", 200
 
     except Exception as error:
         emit("error", error)
