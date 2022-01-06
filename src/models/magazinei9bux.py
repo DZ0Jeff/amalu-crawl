@@ -1,6 +1,5 @@
 from src.utils import convert_price, find_magalu_images, get_magazine_specs, get_specs
 from utils.parser_handler import init_crawler, remove_whitespaces
-from utils.file_handler import dataToExcel
 from bs4 import NavigableString
 from src.controllers.database import insert_products_in_database, update_by_sku
 
@@ -60,8 +59,6 @@ def crawl_magazinevoce(url, nameOfFile, button_text="Ver produto", verbose=False
 
     
     # [print(f"{title}: {detail[0]}") for title, detail in details.items()]
-    # print(price)
-    # print(promotional_price)
     print('> Salvando resultados...')
     if update:
         update_by_sku(details['SKU'][0], details)
@@ -70,4 +67,4 @@ def crawl_magazinevoce(url, nameOfFile, button_text="Ver produto", verbose=False
         insert_products_in_database(details)
     
     # dataToExcel(details, f'{nameOfFile}.csv')
-    # return f'{nameOfFile}.csv'
+    return f'{nameOfFile}.csv'

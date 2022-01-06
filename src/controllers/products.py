@@ -61,6 +61,7 @@ def update_produts(ROOT_DIR, namefile, button_text="Ver produto", update=True):
                 button_text="Ver produto"
 
             emit("message", f"Atualizado {index + 1} de {len(links)} sites...")
+            print(f"{index}/{len(links)}")
 
             print(f"> Link: {link.external_url}")
             test_link = link.external_url.split('/')[2]
