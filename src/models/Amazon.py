@@ -6,6 +6,8 @@ from src.utils import convert_price, format_table, getAmazonImageGalery, get_spe
 from utils.setup import setSelenium
 from utils.webdriver_handler import dynamic_page
 from selenium.common.exceptions import WebDriverException
+from urllib3.exceptions import ProtocolError
+
 
 def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=False):
     
@@ -179,6 +181,11 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=Fa
         print(error)
         return str(error)
 
+    except ProtocolError:
+        driver.quit()
+        return
+
     except Exception:
         driver.quit()
         raise
+
