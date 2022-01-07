@@ -17,16 +17,21 @@ def getAmazonImageGalery(driver):
     driver.implicitly_wait(10)
 
     try:
+        driver.implicitly_wait(0)
         modal = driver.find_element_by_css_selector('.a-dynamic-image.a-stretch-horizontal')
         modal.click()
 
     except NoSuchElementException:
+        driver.implicitly_wait(220)
         try:
+            driver.implicitly_wait(0)
             modal = driver.find_element_by_id('landingImage')
             modal.click()
         
         except NoSuchElementException:
+            driver.implicitly_wait(220)
             try:
+                driver.implicitly_wait(0)
                 modal = driver.find_element_by_id('magnifierLens')
                 modal.click()
 
@@ -36,19 +41,28 @@ def getAmazonImageGalery(driver):
 
     sleep(2)
 
-    images_container = driver.find_element_by_id('ivThumbs')
-    buttons = images_container.find_elements_by_css_selector('.ivThumbImage')
+    try:
+        driver.implicitly_wait(0)
+        images_container = driver.find_element_by_id('ivThumbs')
+        buttons = images_container.find_elements_by_css_selector('.ivThumbImage')
+    
+    except Exception as error:
+        print(error)
+        print('Falha ao pegar a galeria')
+        return
 
     # print(buttons)
     galery = []
     for button in buttons:
         try:
+            driver.implicitly_wait(0)
             button.click()
         
         except ElementNotInteractableException:
             pass
 
         else:
+            driver.implicitly_wait(220)
             pass
         
         sleep(1)
