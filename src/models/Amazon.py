@@ -168,8 +168,11 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=Fa
         return f'{nameOfFile}.csv'
 
     
-    except Exception as error:
+    except (AttributeError, TypeError) as error:
         driver.quit()
         print(error)
-        raise
         return str(error)
+
+    except Exception:
+        driver.quit()
+        raise
