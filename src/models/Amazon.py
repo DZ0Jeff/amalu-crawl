@@ -5,7 +5,7 @@ from utils.file_handler import dataToExcel
 from src.utils import convert_price, format_table, getAmazonImageGalery, get_specs
 from utils.setup import setSelenium
 from utils.webdriver_handler import dynamic_page
-
+from selenium.common.exceptions import WebDriverException
 
 def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=False):
     
@@ -16,7 +16,13 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=Fa
 
     url = str(url)
     print('> Iniciando Amazon crawler...')
-    driver = setSelenium(root_path=ROOT_DIR, console=False)
+    try:
+        driver = setSelenium(root_path=ROOT_DIR, console=False)
+    
+    except WebDriverException:
+        print('Falha o conectar ao driver... :(')
+        return
+    
     try:
         driver.get(url)
         galery = getAmazonImageGalery(driver)
