@@ -185,7 +185,7 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=Fa
         driver.quit()
         return
 
-    except Exception:
+    except:
         driver.quit()
         raise
 

@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from requests.exceptions import InvalidSchema
+from requests.exceptions import InvalidSchema, ReadTimeout
 
 
 def init_crawler(url):
@@ -21,6 +21,10 @@ def init_crawler(url):
     except ConnectionError:
         print('Não conseguiu se conectar na página!')
         return
+
+    except ReadTimeout:
+        print('Timeout no site!')
+        return 
 
 
 def init_parser(html):
