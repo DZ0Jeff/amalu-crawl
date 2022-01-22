@@ -153,14 +153,19 @@ def crawl_aliexpress(url, root_path, nameOfFile, button_text="Ver produto", upda
     if isinstance(decimal_promotional_price, str):
         decimal_promotional_price = 0
 
-    if promotiona_price != '' or decimal_promotional_price > decimal_price:
-        print('> invertendo os preços')
-        product["Preço Promocional"] = [price] 
-        product["Preço"] = [promotiona_price]
-    else:
-        print('> Preços originais')
-        product["Preço Promocional"] = [promotiona_price]
-        product["Preço"] = [price]
+    try:
+        if promotiona_price != '' or decimal_promotional_price > decimal_price:
+            print('> invertendo os preços')
+            product["Preço Promocional"] = [price] 
+            product["Preço"] = [promotiona_price]
+        else:
+            print('> Preços originais')
+            product["Preço Promocional"] = [promotiona_price]
+            product["Preço"] = [price]
+
+    except Exception:
+        print('Erro ao catalogar preços!')
+        return
 
     product['Categorias'] = [category]
     product['Url externa'] = [url]
