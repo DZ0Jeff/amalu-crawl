@@ -17,7 +17,6 @@ from src.models.Shopee import crawl_shopee
 from src.models.aliexpress import crawl_aliexpress
 from src.models.Amazon import crawl_amazon
 from src.models.magazinei9bux import crawl_magazinevoce
-from utils.file_handler import dataToExcel
 
 from src.controllers.products import load_products, update_produts
 from flask_socketio import emit
