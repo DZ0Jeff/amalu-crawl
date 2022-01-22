@@ -164,6 +164,9 @@ def crawl_amazon(url, ROOT_DIR, nameOfFile, button_text="Ver produto", update=Fa
         # if ean is not found, dont add the banner
         if remove_whitespaces(ean) != "":
             asin_final = amazon_iframe(remove_whitespaces(ean))
+
+        else:
+            asin_final = ''
         
         details['Short description'] = [f"{asin_final}\n\n{specs}"]
         details['Descrição'] = [f"{remove_whitespaces(description)}\n\nDescrição Técnica\n\n{tecnical_details}{aditional_info}"]
