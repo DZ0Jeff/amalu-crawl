@@ -19,7 +19,8 @@ from src.models.Amazon import crawl_amazon
 from src.models.magazinei9bux import crawl_magazinevoce
 
 from src.controllers.products import load_products, update_produts
-from flask_socketio import emit
+from flask_socketio import 
+from utils.file_handler import dataToExcel
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
